@@ -605,14 +605,20 @@
       return;
     }
 
-    msgBox.classList.add('hidden');
+    if (end === 'gate2') {
+      msgText.innerText = 'Photo guide currently unavailable for Gate 2. Please follow the straight corridor path shown on the map.';
+      msgBox.classList.remove('hidden');
+      takeMeBtn.disabled = true;
+    } else {
+      msgBox.classList.add('hidden');
+      takeMeBtn.disabled = false;
+    }
 
     let points = buildRoute(start, end);
 
     activePoints = points;
     activeRouteSteps = createSteps(start, end, points);
 
-    takeMeBtn.disabled = false;
     animatePath(points);
   }
 
