@@ -583,6 +583,28 @@
       ]
     };
 
+    // The first three photos are shared because these routes follow the same
+    // path from Gate 2 before reaching their separate classroom doors.
+    const gateToLanguages = [
+      { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
+      { image: 'images/language-corridor.jpg', fallbackText: 'Covered corridor beside green doors', text: 'Follow the covered corridor beside the green doors toward the classrooms.' },
+      { image: 'images/language-doorway.jpg', fallbackText: 'Classroom doorway along the corridor', text: 'Continue along the corridor to the Languages classroom entrance.' }
+    ];
+
+    photoGuides['gate2->languages'] = gateToLanguages;
+    photoGuides['gate2->art'] = [
+      ...gateToLanguages,
+      { image: 'images/art-doorway.jpg', fallbackText: 'Decorated Art classroom doorway', text: 'Continue to the decorated doorway shown here to reach the Art classroom.' }
+    ];
+    photoGuides['gate2->chemistry'] = [
+      ...photoGuides['gate2->art'],
+      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' }
+    ];
+    photoGuides['gate2->history'] = [
+      ...photoGuides['gate2->chemistry'],
+      { image: 'images/history-doorway.jpg', fallbackText: 'Green History classroom doorway', text: 'Follow the corridor to the green doorway shown here to reach History.' }
+    ];
+
     const routeKey = `${start}->${end}`;
     if (photoGuides[routeKey]) return photoGuides[routeKey];
 
