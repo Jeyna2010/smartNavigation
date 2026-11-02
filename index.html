@@ -567,19 +567,29 @@
     const startName = locs[start].name;
     const endName = locs[end].name;
 
+    const photoGuides = {
+      'gate2->bigHall': [
+        { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
+        { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall approach', text: 'Cross the courtyard toward the steps and entrance shown in the photo.' },
+        { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside and continue through the building toward the hall.' },
+        { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'At the wooden double doors, enter Mary Ward Hall.' }
+      ],
+      'gate2->newHall': [
+        { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
+        { image: 'images/hart-courtyard.jpg', fallbackText: 'Courtyard and basketball court', text: 'Cross the courtyard, keeping the basketball court in view as you head toward the green stair tower.' },
+        { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'At the green stair tower, follow the path beside the building.' },
+        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway to Delphine Hart Hall', text: 'Continue along the walkway beside the building toward the entrance.' },
+        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Enter the building and follow the corridor to Delphine Hart Hall.' }
+      ]
+    };
+
+    const routeKey = `${start}->${end}`;
+    if (photoGuides[routeKey]) return photoGuides[routeKey];
+
     return [
-      {
-        fallbackText: 'Starting Point',
-        text: `Start at ${startName} and follow the marked route.`
-      },
-      {
-        fallbackText: 'Campus Corridor',
-        text: 'Follow the corridor or pathway shown on the map. Continue along the highlighted route.'
-      },
-      {
-        fallbackText: 'Destination',
-        text: `Follow the final pathway to reach ${endName}.`
-      }
+      { fallbackText: 'Starting Point', text: `Start at ${startName} and follow the marked route.` },
+      { fallbackText: 'Campus Corridor', text: 'Follow the corridor or pathway shown on the map. Continue along the highlighted route.' },
+      { fallbackText: 'Destination', text: `Follow the final pathway to reach ${endName}.` }
     ];
   }
 
@@ -729,10 +739,16 @@
 
     const imgEl = document.getElementById('modalImg');
 
-    const imageText = encodeURIComponent(step.fallbackText);
-
-    imgEl.src =
+    const imageText = encodeURIComponent(step.fallbackText || 'Route step');
+    const placeholderSrc =
       `https://placehold.co/600x400/2563eb/ffffff?text=${imageText}`;
+
+    imgEl.alt = step.fallbackText || 'Route step visual';
+    imgEl.onerror = function() {
+      imgEl.onerror = null;
+      imgEl.src = placeholderSrc;
+    };
+    imgEl.src = step.image || placeholderSrc;
 
     document.getElementById('prevStepBtn').disabled =
       currentStepIdx === 0;
