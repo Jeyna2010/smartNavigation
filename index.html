@@ -487,7 +487,7 @@
   ];
 
   const classroomDoors = {
-    languages: { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Continue to the Languages classroom doorway.' },
+    languages: { image: 'images/09274b90-5721-49c3-a2a2-575ad2b3ff9e.jpg', fallbackText: 'Languages classroom doorway', text: 'Start at the Languages classroom doorway.' },
     art: { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach Art.' },
     chemistry: { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' },
     history: { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Follow the corridor to the green doorway to reach History.' }
@@ -495,8 +495,8 @@
 
   const roomToRoomBase = {
     languagesToMaryWard: [
-      { image: 'images/09274b90-5721-49c3-a2a2-575ad2b3ff9e.jpg', fallbackText: 'Languages classroom view', text: 'Start at the Languages classroom doorway.' },
-      { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Block A classroom entrance', text: 'Walk out into the main Block A corridor.' },
+      classroomDoors.languages,
+      { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Block A classroom corridor', text: 'Walk out into the main Block A corridor.' },
       { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Walk across toward the entrance of Mary Ward Hall.' },
       { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside and follow the corridor toward the main hall.' },
       { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden double doors.' }
@@ -530,7 +530,7 @@
     const gateToLanguages = [
       { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
       { image: 'images/language-corridor.jpg', fallbackText: 'Covered corridor beside green doors', text: 'Follow the covered corridor beside the green doors toward the classrooms.' },
-      { image: 'images/language-doorway.jpg', fallbackText: 'Classroom doorway along the corridor', text: 'Continue along the corridor to the Languages classroom entrance.' }
+      classroomDoors.languages
     ];
 
     const classroomInterConnections = {
@@ -575,7 +575,7 @@
       'newHall->chemistry': [...dhhBaseToMaryWard, { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' }, classroomDoors.languages, classroomDoors.art, classroomDoors.chemistry],
       'newHall->history': [...dhhBaseToMaryWard, { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' }, classroomDoors.languages, classroomDoors.art, classroomDoors.chemistry, classroomDoors.history],
       'languages->newHall': [
-        { image: 'images/09274b90-5721-49c3-a2a2-575ad2b3ff9e.jpg', fallbackText: 'Languages classroom view', text: 'Start at the Languages classroom doorway.' },
+        classroomDoors.languages,
         { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Classroom corridor exit', text: 'Follow the corridor out of the classroom area.' },
         { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard towards Delphine Hart Hall.' },
         { image: 'images/hart-stairway.jpg', fallbackText: 'Stairway tower', text: 'Pass the outdoor stair tower.' },
