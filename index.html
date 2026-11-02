@@ -1,20 +1,29 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>School Campus Navigator</title>
-  <!-- Tailwind CSS -->
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
     body {
       font-family: 'Inter', sans-serif;
     }
+
+    canvas {
+      width: 100%;
+      height: auto;
+    }
   </style>
 </head>
+
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
 
   <!-- Header -->
@@ -24,677 +33,720 @@
         <div class="bg-blue-600 text-white p-2 rounded-xl shadow-sm">
           <i class="fa-solid fa-compass text-xl"></i>
         </div>
+
         <div>
-          <h1 class="font-bold text-lg text-slate-900 leading-tight">School Campus Navigator</h1>
-          <p class="text-xs text-slate-500">Interactive Map & Visual Walking Directions</p>
+          <h1 class="font-bold text-lg text-slate-900 leading-tight">
+            School Campus Navigator
+          </h1>
+          <p class="text-xs text-slate-500">
+            Interactive Map & Visual Walking Directions
+          </p>
         </div>
       </div>
-      <div class="flex items-center space-x-2">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-          <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-500 rounded-full"></span> Gate 2 Open
-        </span>
-      </div>
+
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+        <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-500 rounded-full"></span>
+        Gate 2 Open
+      </span>
     </div>
   </header>
 
-  <!-- Navigation Control Panel -->
   <main class="max-w-6xl mx-auto px-4 py-4 w-full flex-grow flex flex-col gap-4">
+
+    <!-- Navigation Panel -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
       <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-        
-        <!-- From / To Dropdowns -->
+
         <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="relative">
-            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">Starting Point</label>
+
+          <!-- Starting Point -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+              Starting Point
+            </label>
+
             <div class="relative flex items-center">
               <i class="fa-solid fa-location-dot absolute left-3 text-emerald-600"></i>
-              <select id="startSelect" class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none cursor-pointer">
+
+              <select id="startSelect"
+                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
+
                 <option value="gate2">Gate 2 (Main Entrance)</option>
-                <option value="bigHall">Mary Ward Hall (Big Hall)</option>
-                <option value="newHall">Delphine Hart Hall (New Hall)</option>
-                <option value="languages">Block B - Languages Room</option>
-                <option value="art">Block B - Art Room</option>
-                <option value="chemistry">Block B - Chemistry Lab</option>
-                <option value="history">Block B - History Room</option>
+                <option value="bigHall">Mary Ward Hall</option>
+                <option value="newHall">Delphine Hart Hall</option>
+                <option value="languages">Block B - Languages</option>
+                <option value="art">Block B - Art</option>
+                <option value="chemistry">Block B - Chemistry</option>
+                <option value="history">Block B - History</option>
               </select>
+
               <i class="fa-solid fa-chevron-down absolute right-3 text-xs text-slate-400 pointer-events-none"></i>
             </div>
           </div>
 
-          <div class="relative">
-            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">Destination</label>
+          <!-- Destination -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+              Destination
+            </label>
+
             <div class="relative flex items-center">
               <i class="fa-solid fa-flag-checkered absolute left-3 text-rose-600"></i>
-              <select id="endSelect" class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none cursor-pointer">
-                <option value="bigHall">Mary Ward Hall (Big Hall)</option>
-                <option value="newHall" selected>Delphine Hart Hall (New Hall)</option>
-                <option value="languages">Block B - Languages Room</option>
-                <option value="art">Block B - Art Room</option>
-                <option value="chemistry">Block B - Chemistry Lab</option>
-                <option value="history">Block B - History Room</option>
+
+              <select id="endSelect"
+                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
+
+                <option value="bigHall">Mary Ward Hall</option>
+                <option value="newHall" selected>Delphine Hart Hall</option>
+                <option value="languages">Block B - Languages</option>
+                <option value="art">Block B - Art</option>
+                <option value="chemistry">Block B - Chemistry</option>
+                <option value="history">Block B - History</option>
                 <option value="gate2">Gate 2 (Main Entrance)</option>
               </select>
+
               <i class="fa-solid fa-chevron-down absolute right-3 text-xs text-slate-400 pointer-events-none"></i>
             </div>
           </div>
         </div>
 
-        <!-- Action Buttons -->
+        <!-- Buttons -->
         <div class="flex items-end gap-2 pt-1 md:pt-0">
-          <button id="showPathBtn" onclick="calculateRoute()" class="flex-1 md:flex-initial px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+          <button id="showPathBtn" onclick="calculateRoute()"
+            class="flex-1 md:flex-initial px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-sm flex items-center justify-center gap-2">
             <i class="fa-solid fa-route"></i>
             <span>Show Route</span>
           </button>
-          <button id="takeMeBtn" onclick="openStepViewer()" disabled class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white font-semibold text-sm rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+
+          <button id="takeMeBtn" onclick="openStepViewer()" disabled
+            class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 disabled:opacity-50 text-white font-semibold text-sm rounded-xl shadow-sm flex items-center justify-center gap-2">
             <i class="fa-solid fa-shoe-prints"></i>
             <span>Take Me (Photo Guide)</span>
           </button>
         </div>
-
       </div>
 
-      <!-- Alert Message Box -->
-      <div id="msgBox" class="hidden mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm flex items-center gap-2">
+      <!-- Alert -->
+      <div id="msgBox"
+        class="hidden mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm flex items-center gap-2">
         <i class="fa-solid fa-circle-info text-amber-600"></i>
-        <span id="msgText">Please select two different locations to view route.</span>
+        <span id="msgText">Please select two different locations.</span>
       </div>
     </div>
 
-    <!-- Canvas Map Workspace -->
+    <!-- Map -->
     <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden flex-grow flex items-center justify-center min-h-[460px]">
-      <canvas id="campusCanvas" width="800" height="520" class="max-w-full h-auto rounded-xl bg-slate-50 border border-slate-100"></canvas>
+      <canvas id="campusCanvas" width="800" height="520"
+        class="max-w-full rounded-xl bg-slate-50 border border-slate-100">
+      </canvas>
     </div>
   </main>
 
-  <!-- Photo Step Modal Viewer -->
-  <div id="photoModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <!-- Photo Guide Modal -->
+  <div id="photoModal"
+    class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+
     <div class="bg-white rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-      
+
       <!-- Modal Header -->
       <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
         <div>
-          <h3 id="modalTitle" class="font-bold text-slate-900 text-base">Route Navigation</h3>
-          <p id="modalSubtitle" class="text-xs text-slate-500">Step 1 of 3</p>
+          <h3 id="modalTitle" class="font-bold text-slate-900 text-base">
+            Route Navigation
+          </h3>
+          <p id="modalSubtitle" class="text-xs text-slate-500">
+            Step 1 of 3
+          </p>
         </div>
-        <button onclick="closeStepViewer()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition-all">
+
+        <button onclick="closeStepViewer()"
+          class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Modal Body (Image & Text Writeup) -->
+      <!-- Modal Body -->
       <div class="p-5 flex-grow overflow-y-auto flex flex-col gap-4">
+
         <div class="relative w-full h-64 sm:h-80 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center">
-          <img id="modalImg" src="" alt="Step visual" class="w-full h-full object-cover">
+          <img id="modalImg" src="" alt="Route step visual"
+            class="w-full h-full object-cover">
         </div>
 
         <div class="p-4 bg-blue-50/70 rounded-2xl border border-blue-100 flex items-start gap-3">
           <div class="bg-blue-600 text-white rounded-xl w-8 h-8 flex-shrink-0 flex items-center justify-center font-bold text-sm">
             <span id="stepNumber">1</span>
           </div>
+
           <div>
             <h4 class="font-bold text-slate-900 text-sm mb-0.5">Instruction</h4>
-            <p id="modalInstruction" class="text-sm text-slate-700 leading-relaxed">Turn right and follow the outdoor corridor past the staircase.</p>
+            <p id="modalInstruction" class="text-sm text-slate-700 leading-relaxed"></p>
           </div>
         </div>
       </div>
 
-      <!-- Modal Footer Controls -->
+      <!-- Modal Footer -->
       <div class="p-4 border-t border-slate-100 flex items-center justify-between bg-white">
-        <button id="prevStepBtn" onclick="changeStep(-1)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all flex items-center gap-2">
+        <button id="prevStepBtn" onclick="changeStep(-1)"
+          class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl flex items-center gap-2">
           <i class="fa-solid fa-arrow-left"></i> Previous
         </button>
-        <span id="stepCounterText" class="text-xs font-semibold text-slate-400">Step 1 / 3</span>
-        <button id="nextStepBtn" onclick="changeStep(1)" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all flex items-center gap-2">
+
+        <span id="stepCounterText" class="text-xs font-semibold text-slate-400">
+          Step 1 / 3
+        </span>
+
+        <button id="nextStepBtn" onclick="changeStep(1)"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl flex items-center gap-2">
           Next <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
-
     </div>
   </div>
 
-  <script>
-    // Canvas & Context setup
-    const canvas = document.getElementById('campusCanvas');
-    const ctx = canvas.getContext('2d');
+<script>
+  const canvas = document.getElementById('campusCanvas');
+  const ctx = canvas.getContext('2d');
 
-    // Key map coordinates matching hand-drawn diagrams
-    const TOP_CORRIDOR_Y = 114;
-    const LOWER_PASSAGE_Y = 305;
-    const EAST_LOOP_X = 470;
-    const STAIRS_X = 317;
+  const TOP_CORRIDOR_Y = 114;
+  const LOWER_PASSAGE_Y = 305;
+  const EAST_LOOP_X = 470;
+  const STAIRS_X = 317;
 
-    // Fixed locations for pin rendering & routing
-    const locs = {
-      gate2: { name: "Gate 2", x: 95, y: 35 },
-      gate3: { name: "Gate 3 (Closed)", x: 665, y: 35 },
-      bigHall: { name: "Mary Ward Hall (Big Hall)", x: 290, y: 227 },
-      newHall: { name: "Delphine Hart Hall (New Hall)", x: 82, y: 400 },
-      languages: { name: "Languages Room", x: 440, y: 72 },
-      art: { name: "Art Room", x: 505, y: 72 },
-      chemistry: { name: "Chemistry Lab", x: 565, y: 72 },
-      history: { name: "History Room", x: 625, y: 72 }
-    };
+  // Campus locations
+  const locs = {
+    gate2: {
+      name: "Gate 2",
+      x: 95,
+      y: 35
+    },
 
-    // Explicit hand-drawn pathways locked in place
-    const routesData = {
-      // 1. Gate 2 -> Big Hall
-      'gate2-bigHall': {
-        title: 'Gate 2 to Mary Ward Hall (Big Hall)',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Gate+2+Entrance', fallbackText: 'Gate 2 Entrance Arch', text: 'Enter through Gate 2 main entrance archway.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Top+Corridor', fallbackText: 'Top Corridor', text: 'Walk along the corridor above Big Hall.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Big+Hall+North+Door', fallbackText: 'Big Hall North Door', text: 'Turn down into the main North Entrance of Mary Ward Hall.' }
-        ],
-        points: [
-          { x: 95, y: 55 },
-          { x: 95, y: TOP_CORRIDOR_Y },
-          { x: 290, y: TOP_CORRIDOR_Y },
-          { x: 290, y: 160 }
-        ]
-      },
-      // 2. Gate 2 -> New Hall
-      'gate2-newHall': {
-        title: 'Gate 2 to Delphine Hart Hall (New Hall)',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Gate+2+Exit', fallbackText: 'Gate 2 Exit', text: 'Exit Gate 2 into the main corridor.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=East+Corridor', fallbackText: 'East of Big Hall', text: 'Walk east along the corridor past Block A rooms, then head south down the eastern side of Big Hall.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Passage+Walkway', fallbackText: 'Passage between Hall & Playground', text: 'Cut west through the passage between Big Hall and the Playground.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=New+Hall+Entrance', fallbackText: 'Enter New Hall', text: 'Turn down into New Hall following the entrance track.' }
-        ],
-        points: [
-          { x: 95, y: 55 },
-          { x: 95, y: TOP_CORRIDOR_Y },
-          { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-          { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-          { x: 82, y: LOWER_PASSAGE_Y },
-          { x: 82, y: 380 }
-        ]
-      },
-      // 3. Big Hall -> New Hall
-      'bigHall-newHall': {
-        title: 'Mary Ward Hall to Delphine Hart Hall (New Hall)',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=South+Exit', fallbackText: 'South Exit of Big Hall', text: 'Exit Mary Ward Hall through the South entrance.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Passage+to+New+Hall', fallbackText: 'Passage between Hall & Playground', text: 'Walk along the passage between Big Hall and the Playground towards New Hall.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=New+Hall+Door', fallbackText: 'Enter New Hall', text: 'Turn into the main passage into New Hall.' }
-        ],
-        points: [
-          { x: 290, y: 295 },
-          { x: 290, y: LOWER_PASSAGE_Y },
-          { x: 82, y: LOWER_PASSAGE_Y },
-          { x: 82, y: 380 }
-        ]
-      },
-      // 4. Gate 2 -> Languages Room
-      'gate2-languages': {
-        title: 'Gate 2 to Languages Room',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Gate+2+Entrance', fallbackText: 'Gate 2 Entrance', text: 'Enter through Gate 2.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Languages+Room', fallbackText: 'Block A Corridor to Languages', text: 'Walk straight right along Block A corridor into Languages Room.' }
-        ],
-        points: [
-          { x: 95, y: 55 },
-          { x: 95, y: 72 },
-          { x: 440, y: 72 }
-        ]
-      },
-      // 5. Gate 2 -> Art Room
-      'gate2-art': {
-        title: 'Gate 2 to Art Room',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Gate+2+Entrance', fallbackText: 'Gate 2 Entrance', text: 'Enter through Gate 2.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Art+Room', fallbackText: 'Block A Corridor to Art Room', text: 'Walk straight right along Block A corridor past Languages into Art Room.' }
-        ],
-        points: [
-          { x: 95, y: 55 },
-          { x: 95, y: 72 },
-          { x: 505, y: 72 }
-        ]
-      },
-      // 6. Gate 2 -> Chemistry Lab
-      'gate2-chemistry': {
-        title: 'Gate 2 to Chemistry Lab',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Gate+2+Entrance', fallbackText: 'Gate 2 Entrance', text: 'Enter through Gate 2.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Chemistry+Lab', fallbackText: 'Block A Corridor to Chemistry Lab', text: 'Walk straight right along Block A corridor past Art into Chemistry Lab.' }
-        ],
-        points: [
-          { x: 95, y: 55 },
-          { x: 95, y: 72 },
-          { x: 565, y: 72 }
-        ]
-      },
-      // 7. Gate 2 -> History Room
-      'gate2-history': {
-        title: 'Gate 2 to History Room',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Gate+2+Entrance', fallbackText: 'Gate 2 Entrance', text: 'Enter through Gate 2.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=History+Room', fallbackText: 'Block A Corridor to History Room', text: 'Walk straight right along Block A corridor past Chemistry into History Room.' }
-        ],
-        points: [
-          { x: 95, y: 55 },
-          { x: 95, y: 72 },
-          { x: 625, y: 72 }
-        ]
-      },
-      // 8. New Hall -> Languages
-      'newHall-languages': {
-        title: 'New Hall to Languages Room',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Exit+New+Hall', fallbackText: 'Exit New Hall', text: 'Exit New Hall passage into the walkway between Mary Ward Hall and the Playground.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=East+Loop', fallbackText: 'East Side of Big Hall', text: 'Turn north walking along the eastern side of Big Hall.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Outdoor+Stairs', fallbackText: 'Outdoor Stairs to Block B', text: 'Pass the outdoor stairs and enter the Languages room in Block B.' }
-        ],
-        points: [
-          { x: 82, y: 380 },
-          { x: 82, y: LOWER_PASSAGE_Y },
-          { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-          { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-          { x: STAIRS_X, y: TOP_CORRIDOR_Y },
-          { x: 440, y: TOP_CORRIDOR_Y },
-          { x: 440, y: 72 }
-        ]
-      },
-      // 9. Big Hall -> Art Room
-      'bigHall-art': {
-        title: 'Mary Ward Hall to Art Room',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=North+Exit', fallbackText: 'North Exit of Big Hall', text: 'Exit North door of Mary Ward Hall into the corridor.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Stairs+Junction', fallbackText: 'Stairs Junction', text: 'Turn right along the corridor past the outdoor stairs.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Enter+Art', fallbackText: 'Enter Art Room', text: 'Turn into the Art Room entrance in Block B.' }
-        ],
-        points: [
-          { x: 290, y: 160 },
-          { x: 290, y: TOP_CORRIDOR_Y },
-          { x: STAIRS_X, y: TOP_CORRIDOR_Y },
-          { x: 505, y: TOP_CORRIDOR_Y },
-          { x: 505, y: 72 }
-        ]
-      },
-      // 10. Big Hall -> Chemistry
-      'bigHall-chemistry': {
-        title: 'Mary Ward Hall to Chemistry Lab',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=North+Exit', fallbackText: 'North Exit of Big Hall', text: 'Exit North door of Mary Ward Hall into the corridor.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Corridor+Walk', fallbackText: 'Block B Corridor', text: 'Walk right past Languages and Art.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Enter+Chemistry', fallbackText: 'Enter Chemistry Lab', text: 'Turn into the Chemistry Lab entrance in Block B.' }
-        ],
-        points: [
-          { x: 290, y: 160 },
-          { x: 290, y: TOP_CORRIDOR_Y },
-          { x: STAIRS_X, y: TOP_CORRIDOR_Y },
-          { x: 565, y: TOP_CORRIDOR_Y },
-          { x: 565, y: 72 }
-        ]
-      },
-      // 11. Big Hall -> History
-      'bigHall-history': {
-        title: 'Mary Ward Hall to History Room',
-        steps: [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=North+Exit', fallbackText: 'North Exit of Big Hall', text: 'Exit North door of Mary Ward Hall into the corridor.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=History+Corridor', fallbackText: 'Block B Corridor', text: 'Walk along the corridor past Chemistry.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Enter+History', fallbackText: 'Enter History Room', text: 'Turn into the History Room entrance in Block B.' }
-        ],
-        points: [
-          { x: 290, y: 160 },
-          { x: 290, y: TOP_CORRIDOR_Y },
-          { x: STAIRS_X, y: TOP_CORRIDOR_Y },
-          { x: 625, y: TOP_CORRIDOR_Y },
-          { x: 625, y: 72 }
-        ]
-      }
-    };
+    gate3: {
+      name: "Gate 3 (Closed)",
+      x: 665,
+      y: 35
+    },
 
-    // Block B Rooms (Languages, Art, Chemistry, History) -> New Hall via Outdoor Stairs & East Loop
-    ['languages', 'art', 'chemistry', 'history'].forEach(room => {
-      const rmX = locs[room].x;
-      
-      routesData[`${room}-newHall`] = {
-        title: `${locs[room].name} to Delphine Hart Hall (New Hall)`,
-        steps: [
-          { img: `https://placehold.co/600x400/2563eb/ffffff?text=Exit+${room}`, fallbackText: `Exit ${locs[room].name}`, text: `Exit ${locs[room].name} into the Block B corridor.` },
-          { img: `https://placehold.co/600x400/2563eb/ffffff?text=Outdoor+Stairs`, fallbackText: 'Outdoor Stairs', text: 'Walk to the outdoor stairs and turn down towards the east side of Big Hall.' },
-          { img: `https://placehold.co/600x400/2563eb/ffffff?text=Passage+Walkway`, fallbackText: 'Passage between Hall & Playground', text: 'Walk through the passage between Big Hall and the Playground.' },
-          { img: `https://placehold.co/600x400/2563eb/ffffff?text=New+Hall+Door`, fallbackText: 'Enter New Hall', text: 'Turn down into Delphine Hart Hall.' }
-        ],
-        points: [
-          { x: rmX, y: 72 },
-          { x: rmX, y: TOP_CORRIDOR_Y },
-          { x: STAIRS_X, y: TOP_CORRIDOR_Y },
-          { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-          { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-          { x: 82, y: LOWER_PASSAGE_Y },
-          { x: 82, y: 380 }
-        ]
-      };
+    bigHall: {
+      name: "Mary Ward Hall",
+      x: 290,
+      y: 227
+    },
+
+    newHall: {
+      name: "Delphine Hart Hall",
+      x: 82,
+      y: 400
+    },
+
+    languages: {
+      name: "Languages",
+      x: 440,
+      y: 72
+    },
+
+    art: {
+      name: "Art",
+      x: 505,
+      y: 72
+    },
+
+    chemistry: {
+      name: "Chemistry",
+      x: 565,
+      y: 72
+    },
+
+    history: {
+      name: "History",
+      x: 625,
+      y: 72
+    }
+  };
+
+  let activePoints = [];
+  let activeRouteSteps = [];
+  let currentStepIdx = 0;
+  let animFrame = null;
+
+  // Draw the campus map
+  function drawCampusMap() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Campus boundary
+    ctx.strokeStyle = '#db2777';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(15, 15, 770, 490);
+
+    // Gate 2
+    ctx.fillStyle = '#2563eb';
+    ctx.fillRect(65, 10, 60, 30);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 12px Inter, sans-serif';
+    ctx.fillText('Gate 2', 76, 30);
+
+    // Gate 3
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(635, 10, 60, 30);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText('Gate 3', 646, 24);
+
+    ctx.font = '8px Inter, sans-serif';
+    ctx.fillText('(Closed)', 648, 34);
+
+    // Block A Corridor
+    ctx.fillStyle = '#fcf2f6';
+    ctx.strokeStyle = '#db2777';
+    ctx.lineWidth = 2.5;
+    ctx.fillRect(140, 50, 545, 42);
+    ctx.strokeRect(140, 50, 545, 42);
+
+    ctx.fillStyle = '#db2777';
+    ctx.font = 'bold 12px Inter, sans-serif';
+    ctx.fillText('Block A Corridor', 185, 76);
+
+    // Block B rooms
+    const rooms = [
+      { name: 'Languages', x: 410, w: 60 },
+      { name: 'Art', x: 475, w: 55 },
+      { name: 'Chemistry', x: 535, w: 65 },
+      { name: 'History', x: 605, w: 70 }
+    ];
+
+    rooms.forEach(room => {
+      ctx.strokeStyle = '#db2777';
+      ctx.strokeRect(room.x, 50, room.w, 42);
+
+      ctx.fillStyle = '#9d174d';
+      ctx.font = 'bold 10px Inter, sans-serif';
+      ctx.fillText(room.name, room.x + 6, 75);
     });
 
-    let currentAnimPoint = null;
-    let animFrame = null;
-    let activeRouteSteps = [];
-    let currentStepIdx = 0;
-    let activePoints = [];
+    // Outdoor stairs
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 2;
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillRect(295, 96, 45, 20);
+    ctx.strokeRect(295, 96, 45, 20);
 
-    // Draw main interactive campus map
-    function drawCampusMap() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let sx = 302; sx < 338; sx += 7) {
+      ctx.beginPath();
+      ctx.moveTo(sx, 96);
+      ctx.lineTo(sx, 116);
+      ctx.stroke();
+    }
 
-      // Outer Campus Border
-      ctx.strokeStyle = '#db2777';
-      ctx.lineWidth = 4;
-      ctx.strokeRect(15, 15, 770, 490);
+    ctx.fillStyle = '#1e293b';
+    ctx.font = 'bold 8px Inter, sans-serif';
+    ctx.fillText('Outdoor Stairs', 296, 109);
 
-      // Gate 2 (Main Entrance)
-      ctx.fillStyle = '#2563eb';
-      ctx.fillRect(65, 10, 60, 30);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 12px Inter, sans-serif';
-      ctx.fillText('Gate 2', 76, 30);
+    // Mary Ward Hall
+    ctx.fillStyle = '#fce7f3';
+    ctx.strokeStyle = '#db2777';
+    ctx.lineWidth = 2.5;
+    ctx.fillRect(170, 160, 240, 135);
+    ctx.strokeRect(170, 160, 240, 135);
 
-      // Gate 3 (Closed)
-      ctx.fillStyle = '#64748b';
-      ctx.fillRect(635, 10, 60, 30);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 11px Inter, sans-serif';
-      ctx.fillText('Gate 3', 646, 24);
-      ctx.font = '8px Inter, sans-serif';
-      ctx.fillText('(Closed)', 648, 34);
+    // North entrance
+    ctx.strokeRect(265, 152, 40, 8);
+    ctx.fillRect(265, 152, 40, 8);
 
-      // Block A Structure & Corridor
-      ctx.strokeStyle = '#db2777';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(140, 50, 545, 42);
-      ctx.fillStyle = '#fcf2f6';
-      ctx.fillRect(140, 50, 545, 42);
+    // South entrance
+    ctx.strokeRect(265, 295, 40, 8);
+    ctx.fillRect(265, 295, 40, 8);
 
-      ctx.fillStyle = '#db2777';
-      ctx.font = 'bold 12px Inter, sans-serif';
-      ctx.fillText('Block A Corridor', 185, 76);
+    ctx.fillStyle = '#9d174d';
+    ctx.font = 'bold 14px Inter, sans-serif';
+    ctx.fillText('Mary Ward Hall', 225, 220);
 
-      // Rooms in Block A
-      const rooms = [
-        { name: 'Languages', x: 410, w: 60 },
-        { name: 'Art', x: 475, w: 55 },
-        { name: 'Chemistry', x: 535, w: 65 },
-        { name: 'History', x: 605, w: 70 }
-      ];
+    // Delphine Hart Hall
+    ctx.strokeStyle = '#db2777';
+    ctx.lineWidth = 2.5;
+    ctx.fillStyle = '#fce7f3';
+    ctx.fillRect(30, 310, 125, 180);
+    ctx.strokeRect(30, 310, 125, 180);
 
-      rooms.forEach(r => {
-        ctx.strokeRect(r.x, 50, r.w, 42);
-        ctx.fillStyle = '#9d174d';
-        ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText(r.name, r.x + 6, 75);
-      });
+    // Side entrance
+    ctx.strokeRect(155, 345, 8, 30);
+    ctx.fillRect(155, 345, 8, 30);
 
-      // Outdoor Stairs Structure
-      ctx.strokeStyle = '#475569';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(295, 96, 45, 20);
-      ctx.fillStyle = '#e2e8f0';
-      ctx.fillRect(295, 96, 45, 20);
-      
-      // Stair Tread Lines
-      for (let sx = 302; sx < 338; sx += 7) {
-        ctx.beginPath();
-        ctx.moveTo(sx, 96);
-        ctx.lineTo(sx, 116);
-        ctx.stroke();
+    // Main room
+    ctx.fillStyle = '#fbcfe8';
+    ctx.fillRect(40, 375, 105, 105);
+    ctx.strokeRect(40, 375, 105, 105);
+
+    ctx.fillStyle = '#9d174d';
+    ctx.font = 'bold 12px Inter, sans-serif';
+    ctx.fillText('Delphine Hart', 48, 420);
+    ctx.fillText('Hall', 75, 438);
+
+    // Playground
+    ctx.strokeStyle = '#16a34a';
+    ctx.lineWidth = 2.5;
+    ctx.fillStyle = '#dcfce7';
+    ctx.fillRect(180, 320, 210, 150);
+    ctx.strokeRect(180, 320, 210, 150);
+
+    ctx.fillStyle = '#15803d';
+    ctx.font = 'bold 14px Inter, sans-serif';
+    ctx.fillText('Playground', 245, 400);
+
+    // Secondary playground
+    ctx.fillStyle = '#dcfce7';
+    ctx.fillRect(400, 345, 100, 125);
+    ctx.strokeRect(400, 345, 100, 125);
+
+    ctx.fillStyle = '#15803d';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText('Playground', 410, 410);
+
+    // Block B
+    ctx.strokeStyle = '#db2777';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(530, 180, 130, 140);
+    ctx.strokeRect(530, 180, 130, 140);
+
+    ctx.fillStyle = '#9d174d';
+    ctx.font = 'bold 15px Inter, sans-serif';
+    ctx.fillText('Block B', 565, 255);
+
+    // Canteen
+    ctx.strokeStyle = '#ea580c';
+    ctx.fillStyle = '#ffedd5';
+    ctx.fillRect(540, 355, 120, 90);
+    ctx.strokeRect(540, 355, 120, 90);
+
+    ctx.fillStyle = '#c2410c';
+    ctx.font = 'bold 13px Inter, sans-serif';
+    ctx.fillText('Canteen', 575, 405);
+
+    // Draw active route
+    if (activePoints.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(activePoints[0].x, activePoints[0].y);
+
+      for (let i = 1; i < activePoints.length; i++) {
+        ctx.lineTo(activePoints[i].x, activePoints[i].y);
       }
-      ctx.fillStyle = '#1e293b';
-      ctx.font = 'bold 8px Inter, sans-serif';
-      ctx.fillText('Outdoor Stairs', 296, 109);
 
-      // Big Hall (Mary Ward Hall)
-      ctx.fillStyle = '#fce7f3';
-      ctx.strokeStyle = '#db2777';
-      ctx.lineWidth = 2.5;
-      ctx.fillRect(170, 160, 240, 135);
-      ctx.strokeRect(170, 160, 240, 135);
+      ctx.strokeStyle = '#dc2626';
+      ctx.lineWidth = 4;
+      ctx.setLineDash([8, 6]);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
-      // North entrance door tab
-      ctx.strokeRect(265, 152, 40, 8);
-      ctx.fillRect(265, 152, 40, 8);
-      
-      // South entrance door tab
-      ctx.strokeRect(265, 295, 40, 8);
-      ctx.fillRect(265, 295, 40, 8);
-
-      ctx.fillStyle = '#9d174d';
-      ctx.font = 'bold 14px Inter, sans-serif';
-      ctx.fillText('Big Hall', 260, 220);
-      ctx.font = 'bold 11px Inter, sans-serif';
-      ctx.fillText('(Mary Ward Hall)', 240, 236);
-
-      // New Hall Outer Frame & Structure
-      ctx.strokeStyle = '#db2777';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(30, 310, 125, 180);
-      ctx.fillStyle = '#fce7f3';
-      ctx.fillRect(30, 310, 125, 180);
-
-      // Side entrance door tab for New Hall
-      ctx.strokeRect(155, 345, 8, 30);
-      ctx.fillRect(155, 345, 8, 30);
-
-      // New Hall Inner Main Room
-      ctx.strokeRect(40, 375, 105, 105);
-      ctx.fillStyle = '#fbcfe8';
-      ctx.fillRect(40, 375, 105, 105);
-      ctx.fillStyle = '#9d174d';
-      ctx.font = 'bold 13px Inter, sans-serif';
-      ctx.fillText('New Hall', 62, 425);
-      ctx.font = 'bold 9px Inter, sans-serif';
-      ctx.fillText('(Delphine Hart)', 58, 440);
-
-      // Playground Area Main
-      ctx.strokeStyle = '#16a34a';
-      ctx.lineWidth = 2.5;
-      ctx.strokeRect(180, 320, 210, 150);
-      ctx.fillStyle = '#dcfce7';
-      ctx.fillRect(180, 320, 210, 150);
-      ctx.fillStyle = '#15803d';
-      ctx.font = 'bold 14px Inter, sans-serif';
-      ctx.fillText('Playground', 245, 400);
-
-      // Secondary Playground Area
-      ctx.strokeRect(400, 345, 100, 125);
+      // Starting point
+      ctx.beginPath();
+      ctx.arc(activePoints[0].x, activePoints[0].y, 6, 0, Math.PI * 2);
       ctx.fillStyle = '#16a34a';
-      ctx.fillRect(400, 345, 100, 125);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 11px Inter, sans-serif';
-      ctx.fillText('Playground', 420, 410);
+      ctx.fill();
 
-      // Block B Area
-      ctx.strokeStyle = '#db2777';
-      ctx.strokeRect(530, 180, 130, 140);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(530, 180, 130, 140);
-      ctx.fillStyle = '#9d174d';
-      ctx.font = 'bold 15px Inter, sans-serif';
-      ctx.fillText('Block B', 565, 255);
+      // Destination
+      const last = activePoints[activePoints.length - 1];
 
-      // Canteen Area
-      ctx.strokeStyle = '#ea580c';
-      ctx.strokeRect(540, 355, 120, 90);
-      ctx.fillStyle = '#ffedd5';
-      ctx.fillRect(540, 355, 120, 90);
-      ctx.fillStyle = '#c2410c';
-      ctx.font = 'bold 13px Inter, sans-serif';
-      ctx.fillText('Canteen', 575, 405);
+      ctx.beginPath();
+      ctx.arc(last.x, last.y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = '#dc2626';
+      ctx.fill();
 
-      // Render Static Active Route if available
-      if (activePoints && activePoints.length > 1) {
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  // Build a route between two locations
+  function buildRoute(start, end) {
+    const p1 = locs[start];
+    const p2 = locs[end];
+
+    // Gate 2 to Big Hall
+    if (start === 'gate2' && end === 'bigHall') {
+      return [
+        { x: 95, y: 55 },
+        { x: 95, y: TOP_CORRIDOR_Y },
+        { x: 290, y: TOP_CORRIDOR_Y },
+        { x: 290, y: 160 }
+      ];
+    }
+
+    // Gate 2 to New Hall
+    if (start === 'gate2' && end === 'newHall') {
+      return [
+        { x: 95, y: 55 },
+        { x: 95, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+        { x: 82, y: LOWER_PASSAGE_Y },
+        { x: 82, y: 380 }
+      ];
+    }
+
+    // Big Hall to New Hall
+    if (start === 'bigHall' && end === 'newHall') {
+      return [
+        { x: 290, y: 295 },
+        { x: 290, y: LOWER_PASSAGE_Y },
+        { x: 82, y: LOWER_PASSAGE_Y },
+        { x: 82, y: 380 }
+      ];
+    }
+
+    // New Hall to Block B rooms
+    if (start === 'newHall' &&
+        ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+      return [
+        { x: 82, y: 380 },
+        { x: 82, y: LOWER_PASSAGE_Y },
+        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: 92 }
+      ];
+    }
+
+    // Block B rooms to New Hall
+    if (end === 'newHall' &&
+        ['languages', 'art', 'chemistry', 'history'].includes(start)) {
+      return [
+        { x: p1.x, y: 92 },
+        { x: p1.x, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+        { x: 82, y: LOWER_PASSAGE_Y },
+        { x: 82, y: 380 }
+      ];
+    }
+
+    // Gate 2 to Block B rooms
+    if (start === 'gate2' &&
+        ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+      return [
+        { x: 95, y: 55 },
+        { x: 95, y: 72 },
+        { x: p2.x, y: 72 }
+      ];
+    }
+
+    // Big Hall to Block B rooms
+    if (start === 'bigHall' &&
+        ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+      return [
+        { x: 290, y: 160 },
+        { x: 290, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: 92 }
+      ];
+    }
+
+    // Block B rooms to Big Hall
+    if (end === 'bigHall' &&
+        ['languages', 'art', 'chemistry', 'history'].includes(start)) {
+      return [
+        { x: p1.x, y: 92 },
+        { x: p1.x, y: TOP_CORRIDOR_Y },
+        { x: 290, y: TOP_CORRIDOR_Y },
+        { x: 290, y: 160 }
+      ];
+    }
+
+    // Generic route for other combinations
+    return [
+      { x: p1.x, y: p1.y },
+      { x: p1.x, y: TOP_CORRIDOR_Y },
+      { x: p2.x, y: TOP_CORRIDOR_Y },
+      { x: p2.x, y: p2.y }
+    ];
+  }
+
+  // Generate photo guide steps
+  function createSteps(start, end, points) {
+    const startName = locs[start].name;
+    const endName = locs[end].name;
+
+    return [
+      {
+        fallbackText: 'Starting Point',
+        text: `Start at ${startName} and follow the marked route.`
+      },
+      {
+        fallbackText: 'Campus Corridor',
+        text: 'Follow the corridor or pathway shown on the map. Continue along the highlighted route.'
+      },
+      {
+        fallbackText: 'Destination',
+        text: `Follow the final pathway to reach ${endName}.`
+      }
+    ];
+  }
+
+  // Calculate and display route
+  function calculateRoute() {
+    const start = document.getElementById('startSelect').value;
+    const end = document.getElementById('endSelect').value;
+
+    const msgBox = document.getElementById('msgBox');
+    const msgText = document.getElementById('msgText');
+    const takeMeBtn = document.getElementById('takeMeBtn');
+
+    if (start === end) {
+      msgText.innerText = 'Please select two different locations to calculate the route.';
+      msgBox.classList.remove('hidden');
+      takeMeBtn.disabled = true;
+      activePoints = [];
+      activeRouteSteps = [];
+      drawCampusMap();
+      return;
+    }
+
+    msgBox.classList.add('hidden');
+
+    let points = buildRoute(start, end);
+
+    // Reverse route if needed
+    const reversePoints = buildRoute(end, start);
+
+    if (start !== 'gate2' && end !== 'gate2' &&
+        start !== 'newHall' && end !== 'newHall' &&
+        start !== 'bigHall' && end !== 'bigHall') {
+      points = [
+        { x: locs[start].x, y: locs[start].y },
+        { x: locs[start].x, y: TOP_CORRIDOR_Y },
+        { x: locs[end].x, y: TOP_CORRIDOR_Y },
+        { x: locs[end].x, y: locs[end].y }
+      ];
+    }
+
+    activePoints = points;
+    activeRouteSteps = createSteps(start, end, points);
+
+    takeMeBtn.disabled = false;
+
+    animatePath(points);
+  }
+
+  // Animate the route
+  function animatePath(points) {
+    if (animFrame) cancelAnimationFrame(animFrame);
+
+    let segment = 0;
+    let progress = 0;
+
+    function step() {
+      drawCampusMap();
+
+      if (segment < points.length - 1) {
+        const p1 = points[segment];
+        const p2 = points[segment + 1];
+
+        const currX = p1.x + (p2.x - p1.x) * progress;
+        const currY = p1.y + (p2.y - p1.y) * progress;
+
+        // Moving dot
         ctx.beginPath();
-        ctx.moveTo(activePoints[0].x, activePoints[0].y);
-        for (let i = 1; i < activePoints.length; i++) {
-          ctx.lineTo(activePoints[i].x, activePoints[i].y);
-        }
-        ctx.strokeStyle = '#dc2626';
-        ctx.lineWidth = 4;
-        ctx.setLineDash([8, 6]);
-        ctx.stroke();
-        ctx.setLineDash([]); // Reset line dash
-
-        // Start point indicator
-        ctx.beginPath();
-        ctx.arc(activePoints[0].x, activePoints[0].y, 6, 0, Math.PI * 2);
-        ctx.fillStyle = '#16a34a';
+        ctx.arc(currX, currY, 8, 0, Math.PI * 2);
+        ctx.fillStyle = '#2563eb';
         ctx.fill();
 
-        // End point indicator
-        const lastPt = activePoints[activePoints.length - 1];
-        ctx.beginPath();
-        ctx.arc(lastPt.x, lastPt.y, 7, 0, Math.PI * 2);
-        ctx.fillStyle = '#dc2626';
-        ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.stroke();
-      }
-    }
 
-    // Calculate & Display selected route
-    function calculateRoute() {
-      const start = document.getElementById('startSelect').value;
-      const end = document.getElementById('endSelect').value;
-      const msgBox = document.getElementById('msgBox');
-      const msgText = document.getElementById('msgText');
+        progress += 0.04;
 
-      if (start === end) {
-        msgText.innerText = 'Please select two different locations to calculate route.';
-        msgBox.classList.remove('hidden');
-        document.getElementById('takeMeBtn').disabled = true;
-        activePoints = [];
-        drawCampusMap();
-        return;
-      }
-
-      msgBox.classList.add('hidden');
-      const key = `${start}-${end}`;
-      const revKey = `${end}-${start}`;
-
-      let routeObj = routesData[key];
-      let pointsToUse = null;
-
-      if (routeObj) {
-        pointsToUse = routeObj.points;
-        activeRouteSteps = routeObj.steps;
-      } else if (routesData[revKey]) {
-        routeObj = routesData[revKey];
-        pointsToUse = [...routeObj.points].reverse();
-        activeRouteSteps = routeObj.steps.map(s => ({
-          img: s.img,
-          fallbackText: s.fallbackText,
-          text: `Reverse Direction: ${s.text}`
-        })).reverse();
-      } else {
-        // Dynamic Fallback Route Construction
-        const p1 = locs[start];
-        const p2 = locs[end];
-        pointsToUse = [
-          { x: p1.x, y: p1.y },
-          { x: p1.x, y: TOP_CORRIDOR_Y },
-          { x: p2.x, y: TOP_CORRIDOR_Y },
-          { x: p2.x, y: p2.y }
-        ];
-        activeRouteSteps = [
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Start+Location', fallbackText: 'Start Location', text: `Depart from ${locs[start].name}.` },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Main+Corridor', fallbackText: 'Main Corridor', text: 'Follow the central corridor path.' },
-          { img: 'https://placehold.co/600x400/2563eb/ffffff?text=Destination+Arrival', fallbackText: 'Destination', text: `Arrive at ${locs[end].name}.` }
-        ];
-      }
-
-      activePoints = pointsToUse;
-      document.getElementById('takeMeBtn').disabled = false;
-
-      // Animate line path movement
-      animatePath(pointsToUse);
-    }
-
-    // Smooth path animation
-    function animatePath(points) {
-      if (animFrame) cancelAnimationFrame(animFrame);
-      let segment = 0;
-      let progress = 0;
-
-      function step() {
-        drawCampusMap();
-
-        if (segment < points.length - 1) {
-          const p1 = points[segment];
-          const p2 = points[segment + 1];
-          
-          const currX = p1.x + (p2.x - p1.x) * progress;
-          const currY = p1.y + (p2.y - p1.y) * progress;
-
-          // Moving dot glow
-          ctx.beginPath();
-          ctx.arc(currX, currY, 8, 0, Math.PI * 2);
-          ctx.fillStyle = '#2563eb';
-          ctx.fill();
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-
-          progress += 0.04;
-          if (progress >= 1) {
-            progress = 0;
-            segment++;
-          }
-          animFrame = requestAnimationFrame(step);
-        } else {
-          drawCampusMap();
+        if (progress >= 1) {
+          progress = 0;
+          segment++;
         }
+
+        animFrame = requestAnimationFrame(step);
+      } else {
+        drawCampusMap();
       }
-
-      step();
     }
 
-    // Open Step Modal Guide
-    function openStepViewer() {
-      if (!activeRouteSteps || activeRouteSteps.length === 0) return;
+    step();
+  }
+
+  // Open photo guide
+  function openStepViewer() {
+    if (!activeRouteSteps.length) return;
+
+    currentStepIdx = 0;
+    updateModalStep();
+
+    const modal = document.getElementById('photoModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  }
+
+  // Close photo guide
+  function closeStepViewer() {
+    const modal = document.getElementById('photoModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }
+
+  // Change photo guide step
+  function changeStep(dir) {
+    currentStepIdx += dir;
+
+    if (currentStepIdx < 0) {
       currentStepIdx = 0;
-      updateModalStep();
-      document.getElementById('photoModal').classList.remove('hidden');
     }
 
-    function closeStepViewer() {
-      document.getElementById('photoModal').classList.add('hidden');
+    if (currentStepIdx >= activeRouteSteps.length) {
+      currentStepIdx = activeRouteSteps.length - 1;
     }
 
-    function changeStep(dir) {
-      currentStepIdx += dir;
-      if (currentStepIdx < 0) currentStepIdx = 0;
-      if (currentStepIdx >= activeRouteSteps.length) currentStepIdx = activeRouteSteps.length - 1;
-      updateModalStep();
-    }
+    updateModalStep();
+  }
 
-    function updateModalStep() {
-      const step = activeRouteSteps[currentStepIdx];
-      const startLoc = locs[document.getElementById('startSelect').value].name;
-      const endLoc = locs[document.getElementById('endSelect').value].name;
+  // Update photo guide content
+  function updateModalStep() {
+    const step = activeRouteSteps[currentStepIdx];
 
-      document.getElementById('modalTitle').innerText = `${startLoc} ➔ ${endLoc}`;
-      document.getElementById('modalSubtitle').innerText = `Step ${currentStepIdx + 1} of ${activeRouteSteps.length}`;
-      document.getElementById('stepNumber').innerText = currentStepIdx + 1;
-      document.getElementById('modalInstruction').innerText = step.text;
-      document.getElementById('stepCounterText').innerText = `Step ${currentStepIdx + 1} / ${activeRouteSteps.length}`;
+    const startName = locs[document.getElementById('startSelect').value].name;
+    const endName = locs[document.getElementById('endSelect').value].name;
 
-      const imgEl = document.getElementById('modalImg');
-      imgEl.src = step.img;
-      imgEl.onerror = function() {
-        this.src = `https://placehold.co/600x400/2563eb/ffffff?text=${encodeURIComponent(step.fallbackText)}`;
-      };
+    document.getElementById('modalTitle').innerText =
+      `${startName} ➔ ${endName}`;
 
-      document.getElementById('prevStepBtn').disabled = (currentStepIdx === 0);
-      document.getElementById('nextStepBtn').disabled = (currentStepIdx === activeRouteSteps.length - 1);
-    }
+    document.getElementById('modalSubtitle').innerText =
+      `Step ${currentStepIdx + 1} of ${activeRouteSteps.length}`;
 
-    // Initial canvas setup load
-    window.onload = function() {
-      drawCampusMap();
-      calculateRoute();
-    };
-  </script>
+    document.getElementById('stepNumber').innerText =
+      currentStepIdx + 1;
+
+    document.getElementById('modalInstruction').innerText =
+      step.text;
+
+    document.getElementById('stepCounterText').innerText =
+      `Step ${currentStepIdx + 1} / ${activeRouteSteps.length}`;
+
+    const imgEl = document.getElementById('modalImg');
+
+    const imageText = encodeURIComponent(step.fallbackText);
+
+    imgEl.src =
+      `https://placehold.co/600x400/2563eb/ffffff?text=${imageText}`;
+
+    document.getElementById('prevStepBtn').disabled =
+      currentStepIdx === 0;
+
+    document.getElementById('nextStepBtn').disabled =
+      currentStepIdx === activeRouteSteps.length - 1;
+  }
+
+  // Initial setup
+  window.onload = function() {
+    drawCampusMap();
+    calculateRoute();
+  };
+</script>
+
 </body>
 </html>
