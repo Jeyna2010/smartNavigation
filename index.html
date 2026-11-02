@@ -605,6 +605,37 @@
       { image: 'images/history-doorway.jpg', fallbackText: 'Green History classroom doorway', text: 'Follow the corridor to the green doorway shown here to reach History.' }
     ];
 
+    // Mary Ward Hall to Delphine Hart Hall follows the five photos supplied.
+    photoGuides['bigHall->newHall'] = [
+      { image: 'images/maryward-courtyard.jpg', fallbackText: 'Steps from Mary Ward Hall to the courtyard', text: 'Leave Mary Ward Hall and go down the steps into the courtyard.' },
+      { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard and basketball court', text: 'Cross the courtyard toward the green outdoor stair tower.' },
+      { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'At the green stair tower, follow the path beside the building.' },
+      { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway beside the building', text: 'Continue along the walkway toward Delphine Hart Hall.' },
+      { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Enter the building and follow the corridor to Delphine Hart Hall.' }
+    ];
+
+    // The first three photos are shared across the classroom routes from Mary Ward Hall.
+    const maryWardToLanguages = [
+      { image: 'images/maryward-courtyard.jpg', fallbackText: 'Steps from Mary Ward Hall to the courtyard', text: 'Leave Mary Ward Hall and go down the steps into the courtyard.' },
+      { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance steps', text: 'Go up the steps to the Block A entrance and continue inside.' },
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages corridor doorway', text: 'Follow the corridor to the Languages classroom doorway.' }
+    ];
+
+    photoGuides['bigHall->languages'] = maryWardToLanguages;
+    photoGuides['bigHall->art'] = [
+      ...maryWardToLanguages,
+      { image: 'images/art-doorway.jpg', fallbackText: 'Decorated Art classroom doorway', text: 'Continue to the decorated doorway shown here to reach the Art classroom.' }
+    ];
+    photoGuides['bigHall->chemistry'] = [
+      ...photoGuides['bigHall->art'],
+      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' }
+    ];
+    photoGuides['bigHall->history'] = [
+      ...photoGuides['bigHall->chemistry'],
+      { image: 'images/history-doorway.jpg', fallbackText: 'Green History classroom doorway', text: 'Follow the corridor to the green doorway shown here to reach History.' }
+    ];
+
+    
     const routeKey = `${start}->${end}`;
     if (photoGuides[routeKey]) return photoGuides[routeKey];
 
