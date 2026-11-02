@@ -848,3 +848,61 @@
   };
 })();
 </script>
+
+<script>
+(function () {
+  const earlierCreateSteps = createSteps;
+  const dhhToLanguages = [
+    { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Start at Delphine Hart Hall and follow the corridor to the exit.' },
+    { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway beside Delphine Hart Hall', text: 'Follow the walkway away from Delphine Hart Hall.' },
+    { image: 'images/hart-courtyard.jpg', fallbackText: 'Courtyard route toward the classrooms', text: 'Continue through the courtyard toward the Block A classroom corridor.' },
+    { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'Pass the green stair tower and continue toward the classroom wing.' },
+    { image: 'images/language-corridor.jpg', fallbackText: 'Classroom corridor', text: 'Follow the corridor along the classroom wing.' },
+    { image: 'images/block-a-entry.jpg', fallbackText: 'Block A classroom entrance', text: 'Enter the Block A corridor and continue to the Languages classroom.' },
+    { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Stop at the Languages classroom doorway.' }
+  ];
+  const artStep = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach Art.' };
+  const chemistryStep = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' };
+  const historyStep = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Continue to the green doorway to reach History.' };
+  const routes = {
+    bigHall: earlierCreateSteps('newHall', 'bigHall', []),
+    languages: dhhToLanguages,
+    art: [...dhhToLanguages, artStep],
+    chemistry: [...dhhToLanguages, artStep, chemistryStep],
+    history: [...dhhToLanguages, artStep, chemistryStep, historyStep]
+  };
+  createSteps = function (start, end, points) {
+    if (start === 'newHall' && routes[end]) return routes[end];
+    return earlierCreateSteps(start, end, points);
+  };
+})();
+</script>
+
+<script>
+(function () {
+  const previousCreateSteps = createSteps;
+  const dhhClassroomBase = [
+    { image: 'images/block-a-entry.jpg', fallbackText: 'Block A classroom entrance', text: 'From Delphine Hart Hall, head to the Block A classroom entrance.' },
+    { image: 'images/language-corridor.jpg', fallbackText: 'Classroom corridor', text: 'Follow the classroom corridor toward the destination.' }
+  ];
+  const languageDoor = { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Continue to the Languages classroom doorway.' };
+  const artDoor = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue along the corridor to the Art classroom doorway.' };
+  const chemistryDoor = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the Chemistry classroom doorway.' };
+  const historyDoor = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Continue to the History classroom doorway.' };
+  const directRoutes = {
+    languages: [...dhhClassroomBase, languageDoor],
+    art: [...dhhClassroomBase, languageDoor, artDoor],
+    chemistry: [...dhhClassroomBase, languageDoor, artDoor, chemistryDoor],
+    history: [...dhhClassroomBase, languageDoor, artDoor, chemistryDoor, historyDoor]
+  };
+  createSteps = function (start, end, points) {
+    if (start === 'newHall' && end === 'bigHall') {
+      return previousCreateSteps(start, end, points);
+    }
+    if (start === 'newHall' && directRoutes[end]) return directRoutes[end];
+    return previousCreateSteps(start, end, points);
+  };
+})();
+</script>
+
+<script>console.log('route fix checkpoint')</script>
