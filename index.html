@@ -170,6 +170,9 @@
         <div class="relative w-full h-64 sm:h-80 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center">
           <img id="modalImg" src="" alt="Route step visual"
             class="w-full h-full object-cover">
+          <span id="imagePlaceholder" class="absolute text-sm text-slate-400 font-medium pointer-events-none">
+            Add image path for this step
+          </span>
         </div>
 
         <div class="p-4 bg-blue-50/70 rounded-2xl border border-blue-100 flex items-start gap-3">
@@ -482,154 +485,122 @@
     ];
   }
 
-  const dhhBaseToMaryWard = [
-    { image: 'images/6d8905f9-0ab9-45f2-8cb0-517d7ab9ca24.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Start inside Delphine Hart Hall and follow the corridor toward the exit.' },
-    { image: 'images/a3e4a296-f4c3-4f63-97f6-ae7ebf380653.jpg', fallbackText: 'Walkway outside Delphine Hart Hall', text: 'Leave the hall and continue along the walkway beside the building.' },
-    { image: 'images/6a6c61a0-0748-49fd-9e8b-075b7973cb7f.jpg', fallbackText: 'Green outdoor stair tower', text: 'Follow the path beside the green stair tower toward the courtyard.' },
-    { image: 'images/e72c10ad-eb93-4a69-9833-af86593084f6.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard toward Mary Ward Hall.' },
-    { image: 'images/e76c7155-ce88-463e-adcc-215349589fdf.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Walk up to the Mary Ward Hall entrance.' }
-  ];
+  // Creates the requested number of empty photo-guide slots.
+  // To add a picture later, replace image: "" with its file path.
+  // To add directions later, type them into text: "".
+  function createBlankSteps(count) {
+    return Array.from({ length: count }, () => ({
+      image: "",
+      fallbackText: "",
+      text: ""
+    }));
+  }
 
-  const classroomDoors = {
-    languages: { image: 'images/09274b90-5721-49c3-a2a2-575ad2b3ff9e.jpg', fallbackText: 'Languages classroom doorway', text: 'Start at the Languages classroom doorway.' },
-    art: { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach Art.' },
-    chemistry: { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' },
-    history: { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Follow the corridor to the green doorway to reach History.' }
+  // Picture counts supplied for each directed route.
+  // Mary Ward Hall -> Gate 2 was not assigned a picture count, so it is omitted for now.
+  const routePhotoGuides = {
+    // GATE 2
+    "gate2->bigHall": createBlankSteps(4),
+    "gate2->newHall": createBlankSteps(5),
+    "gate2->languages": createBlankSteps(3),
+    "gate2->art": createBlankSteps(4),
+    "gate2->chemistry": createBlankSteps(5),
+    "gate2->history": createBlankSteps(6),
+
+    // MARY WARD HALL
+    "bigHall->newHall": createBlankSteps(5),
+
+    // DELPHINE HART HALL
+    "newHall->bigHall": createBlankSteps(5),
+    "newHall->languages": createBlankSteps(7),
+    "newHall->art": createBlankSteps(8),
+    "newHall->chemistry": createBlankSteps(9),
+    "newHall->history": createBlankSteps(10),
+    "newHall->gate2": createBlankSteps(5),
+
+    // LANGUAGES
+    "languages->newHall": createBlankSteps(6),
+    "languages->bigHall": createBlankSteps(3),
+    "languages->history": createBlankSteps(2),
+    "languages->chemistry": createBlankSteps(2),
+    "languages->art": createBlankSteps(2),
+    "languages->gate2": createBlankSteps(2),
+
+    // HISTORY
+    "history->newHall": createBlankSteps(5),
+    "history->bigHall": createBlankSteps(3),
+    "history->gate2": createBlankSteps(1),
+    "history->chemistry": createBlankSteps(2),
+    "history->art": createBlankSteps(2),
+    "history->languages": createBlankSteps(2),
+
+    // CHEMISTRY
+    "chemistry->newHall": createBlankSteps(5),
+    "chemistry->bigHall": createBlankSteps(2),
+    "chemistry->history": createBlankSteps(2),
+    "chemistry->art": createBlankSteps(2),
+    "chemistry->languages": createBlankSteps(2),
+    "chemistry->gate2": createBlankSteps(2),
+
+    // ART
+    "art->bigHall": createBlankSteps(3),
+    "art->newHall": createBlankSteps(5),
+    "art->gate2": createBlankSteps(2),
+    "art->history": createBlankSteps(2),
+    "art->languages": createBlankSteps(2),
+    "art->chemistry": createBlankSteps(2)
   };
 
-  const roomToRoomBase = {
-    languagesToMaryWard: [
-      classroomDoors.languages,
-      { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Block A classroom corridor', text: 'Walk out into the main Block A corridor.' },
-      { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Walk across toward the entrance of Mary Ward Hall.' },
-      { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside and follow the corridor toward the main hall.' },
-      { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden double doors.' }
+  // These original Mary Ward Hall images are retained exactly as requested.
+  // Each route adds the next destination doorway image to the previous sequence.
+  const maryWardImages = {
+    languages: [
+      "images/maryward-courtyard.jpg",
+      "images/block-a-entry.jpg",
+      "images/language-doorway.jpg"
     ],
-    artToMaryWard: [
-      { image: 'images/74d5c37b-204a-466e-8e46-bc6febc6a033.jpg', fallbackText: 'Art classroom doorway', text: 'Start at the Art classroom entrance.' },
-      { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Block A corridor', text: 'Head through the corridor toward the courtyard exit.' },
-      { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Cross toward Mary Ward Hall entrance.' },
-      { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside and walk toward the hall.' },
-      { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden double doors.' }
+    art: [
+      "images/maryward-courtyard.jpg",
+      "images/block-a-entry.jpg",
+      "images/language-doorway.jpg",
+      "images/art-doorway.jpg"
     ],
-    chemToMaryWard: [
-      { image: 'images/9305cd73-dd44-4050-902a-7eff483b86eb.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Start at the Chemistry classroom entrance.' },
-      { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Block A corridor', text: 'Head through the corridor toward the exit.' },
-      { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall approach', text: 'Cross toward Mary Ward Hall.' },
-      { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside toward the hall.' },
-      { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden double doors.' }
+    chemistry: [
+      "images/maryward-courtyard.jpg",
+      "images/block-a-entry.jpg",
+      "images/language-doorway.jpg",
+      "images/art-doorway.jpg",
+      "images/chemistry-doorway.jpg"
     ],
-    histToMaryWard: [
-      { image: 'images/00389644-3d13-44bd-8cac-62ec9f120b8e.jpg', fallbackText: 'History classroom doorway', text: 'Start at the History classroom entrance.' },
-      { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Block A corridor', text: 'Head through the corridor toward the exit.' },
-      { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall approach', text: 'Cross toward Mary Ward Hall.' },
-      { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside toward the hall.' },
-      { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden double doors.' }
+    history: [
+      "images/maryward-courtyard.jpg",
+      "images/block-a-entry.jpg",
+      "images/language-doorway.jpg",
+      "images/art-doorway.jpg",
+      "images/chemistry-doorway.jpg",
+      "images/history-doorway.jpg"
     ]
   };
 
-  function createSteps(start, end, points) {
+  function createSteps(start, end) {
     const routeKey = `${start}->${end}`;
 
-    const gateToLanguages = [
-      { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
-      { image: 'images/language-corridor.jpg', fallbackText: 'Covered corridor beside green doors', text: 'Follow the covered corridor beside the green doors toward the classrooms.' },
-      classroomDoors.languages
-    ];
+    // Keep the original images for Mary Ward Hall -> Language, Art,
+    // Chemistry and History. Directions remain blank for you to fill in.
+    if (start === "bigHall" && maryWardImages[end]) {
+      return maryWardImages[end].map(image => ({
+        image,
+        fallbackText: "",
+        text: ""
+      }));
+    }
 
-    const classroomInterConnections = {
-      'languages->art': [classroomDoors.languages, classroomDoors.art],
-      'languages->chemistry': [classroomDoors.languages, classroomDoors.chemistry],
-      'languages->history': [classroomDoors.languages, classroomDoors.history],
-      'art->languages': [classroomDoors.art, classroomDoors.languages],
-      'art->chemistry': [classroomDoors.art, classroomDoors.chemistry],
-      'art->history': [classroomDoors.art, classroomDoors.history],
-      'chemistry->languages': [classroomDoors.chemistry, classroomDoors.languages],
-      'chemistry->art': [classroomDoors.chemistry, classroomDoors.art],
-      'chemistry->history': [classroomDoors.chemistry, classroomDoors.history],
-      'history->languages': [classroomDoors.history, classroomDoors.languages],
-      'history->art': [classroomDoors.history, classroomDoors.art],
-      'history->chemistry': [classroomDoors.history, classroomDoors.chemistry]
-    };
-
-    if (classroomInterConnections[routeKey]) return classroomInterConnections[routeKey];
-
-    const photoGuides = {
-      'gate2->bigHall': [
-        { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
-        { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall approach', text: 'Cross the courtyard toward the steps and entrance shown in the photo.' },
-        { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside and continue through the building toward the hall.' },
-        { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'At the wooden double doors, enter Mary Ward Hall.' }
-      ],
-      'gate2->newHall': [
-        { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
-        { image: 'images/hart-courtyard.jpg', fallbackText: 'Courtyard and basketball court', text: 'Cross the courtyard, keeping the basketball court in view as you head toward the green stair tower.' },
-        { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'At the green stair tower, follow the path beside the building.' },
-        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway to Delphine Hart Hall', text: 'Continue along the walkway beside the building toward the entrance.' },
-        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Enter the building and follow the corridor to Delphine Hart Hall.' }
-      ],
-      'gate2->languages': gateToLanguages,
-      'gate2->art': [...gateToLanguages, classroomDoors.art],
-      'gate2->chemistry': [...gateToLanguages, classroomDoors.art, classroomDoors.chemistry],
-      'gate2->history': [...gateToLanguages, classroomDoors.art, classroomDoors.chemistry, classroomDoors.history],
-      'newHall->bigHall': [...dhhBaseToMaryWard, { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden doors.' }],
-      'newHall->gate2': dhhBaseToMaryWard,
-      'newHall->languages': [...dhhBaseToMaryWard, { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' }, classroomDoors.languages],
-      'newHall->art': [...dhhBaseToMaryWard, { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' }, classroomDoors.languages, classroomDoors.art],
-      'newHall->chemistry': [...dhhBaseToMaryWard, { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' }, classroomDoors.languages, classroomDoors.art, classroomDoors.chemistry],
-      'newHall->history': [...dhhBaseToMaryWard, { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' }, classroomDoors.languages, classroomDoors.art, classroomDoors.chemistry, classroomDoors.history],
-      'languages->newHall': [
-        classroomDoors.languages,
-        { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Classroom corridor exit', text: 'Follow the corridor out of the classroom area.' },
-        { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard towards Delphine Hart Hall.' },
-        { image: 'images/hart-stairway.jpg', fallbackText: 'Stairway tower', text: 'Pass the outdoor stair tower.' },
-        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway', text: 'Follow the walkway alongside the building.' },
-        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart corridor', text: 'Enter the corridor leading to Delphine Hart Hall.' }
-      ],
-      'art->newHall': [
-        { image: 'images/74d5c37b-204a-466e-8e46-bc6febc6a033.jpg', fallbackText: 'Art doorway', text: 'Start at the Art classroom doorway.' },
-        { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Classroom corridor exit', text: 'Follow the corridor out of the classroom area.' },
-        { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard towards Delphine Hart Hall.' },
-        { image: 'images/hart-stairway.jpg', fallbackText: 'Stairway tower', text: 'Pass the outdoor stair tower.' },
-        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway', text: 'Follow the walkway alongside the building.' },
-        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart corridor', text: 'Enter the corridor leading to Delphine Hart Hall.' }
-      ],
-      'chemistry->newHall': [
-        { image: 'images/9305cd73-dd44-4050-902a-7eff483b86eb.jpg', fallbackText: 'Chemistry doorway', text: 'Start at the Chemistry classroom doorway.' },
-        { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Classroom corridor exit', text: 'Follow the corridor out of the classroom area.' },
-        { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard towards Delphine Hart Hall.' },
-        { image: 'images/hart-stairway.jpg', fallbackText: 'Stairway tower', text: 'Pass the outdoor stair tower.' },
-        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway', text: 'Follow the walkway alongside the building.' },
-        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart corridor', text: 'Enter the corridor leading to Delphine Hart Hall.' }
-      ],
-      'history->newHall': [
-        { image: 'images/00389644-3d13-44bd-8cac-62ec9f120b8e.jpg', fallbackText: 'History doorway', text: 'Start at the History classroom doorway.' },
-        { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Classroom corridor exit', text: 'Follow the corridor out of the classroom area.' },
-        { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard towards Delphine Hart Hall.' },
-        { image: 'images/hart-stairway.jpg', fallbackText: 'Stairway tower', text: 'Pass the outdoor stair tower.' },
-        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway', text: 'Follow the walkway alongside the building.' },
-        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart corridor', text: 'Enter the corridor leading to Delphine Hart Hall.' }
-      ],
-      'languages->bigHall': roomToRoomBase.languagesToMaryWard,
-      'art->bigHall': roomToRoomBase.artToMaryWard,
-      'chemistry->bigHall': roomToRoomBase.chemToMaryWard,
-      'history->bigHall': roomToRoomBase.histToMaryWard
-    };
-
-    if (photoGuides[routeKey]) return photoGuides[routeKey];
-
-    const startName = locs[start] ? locs[start].name : start;
-    const endName = locs[end] ? locs[end].name : end;
-
-    return [
-      { fallbackText: 'Starting Point', text: `Start at ${startName} and follow the marked route.` },
-      { fallbackText: 'Campus Corridor', text: 'Follow the corridor or pathway shown on the map. Continue along the highlighted route.' },
-      { fallbackText: 'Destination', text: `Follow the final pathway to reach ${endName}.` }
-    ];
+    return routePhotoGuides[routeKey] || createBlankSteps(0);
   }
 
   function onSelectionChange() {
     document.getElementById('takeMeBtn').disabled = true;
+    document.getElementById('msgBox').classList.add('hidden');
   }
 
   function calculateRoute() {
@@ -660,15 +631,6 @@
       return;
     }
 
-    if (end === 'gate2') {
-      msgText.innerText = 'Photo guide currently unavailable for Gate 2. Please follow the straight corridor path shown on the map.';
-      msgBox.classList.remove('hidden');
-      takeMeBtn.disabled = true;
-    } else {
-      msgBox.classList.add('hidden');
-      takeMeBtn.disabled = false;
-    }
-
     let points = buildRoute(start, end);
 
     if (start !== 'gate2' && end !== 'gate2' &&
@@ -683,7 +645,16 @@
     }
 
     activePoints = points;
-    activeRouteSteps = createSteps(start, end, points);
+    activeRouteSteps = createSteps(start, end);
+
+    if (activeRouteSteps.length === 0) {
+      msgText.innerText = 'The photo-guide picture count for this route has not been set yet.';
+      msgBox.classList.remove('hidden');
+      takeMeBtn.disabled = true;
+    } else {
+      msgBox.classList.add('hidden');
+      takeMeBtn.disabled = false;
+    }
 
     animatePath(points);
   }
@@ -775,19 +746,24 @@
     document.getElementById('modalTitle').innerText = `${startName} ➔ ${endName}`;
     document.getElementById('modalSubtitle').innerText = `Step ${currentStepIdx + 1} of ${activeRouteSteps.length}`;
     document.getElementById('stepNumber').innerText = currentStepIdx + 1;
-    document.getElementById('modalInstruction').innerText = step.text;
+    document.getElementById('modalInstruction').innerText = step.text || '';
     document.getElementById('stepCounterText').innerText = `Step ${currentStepIdx + 1} / ${activeRouteSteps.length}`;
 
     const imgEl = document.getElementById('modalImg');
-    const imageText = encodeURIComponent(step.fallbackText || 'Route step');
-    const placeholderSrc = `https://placehold.co/600x400/2563eb/ffffff?text=${imageText}`;
+    const placeholder = document.getElementById('imagePlaceholder');
 
-    imgEl.alt = step.fallbackText || 'Route step visual';
-    imgEl.onerror = function() {
-      imgEl.onerror = null;
-      imgEl.src = placeholderSrc;
-    };
-    imgEl.src = step.image || placeholderSrc;
+    imgEl.onerror = null;
+    imgEl.alt = step.fallbackText || 'Route step image';
+
+    if (step.image) {
+      imgEl.src = step.image;
+      imgEl.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+    } else {
+      imgEl.removeAttribute('src');
+      imgEl.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+    }
 
     document.getElementById('prevStepBtn').disabled = (currentStepIdx === 0);
     document.getElementById('nextStepBtn').disabled = (currentStepIdx === activeRouteSteps.length - 1);
