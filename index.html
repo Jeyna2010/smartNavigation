@@ -793,11 +793,12 @@
 })();
 </script>
 
-<!-- Route Extensions Script 3 (Reverse Routes) -->
+<!-- Route Extensions Script 3 (Reverse & Classroom to Mary Ward Routes) -->
 <script>
 (function () {
   const previousCreateSteps = createSteps;
 
+  // Delphine Hart Hall reverse routes
   const langToDhh = [
     { image: 'images/languages-step1.jpg', fallbackText: 'Languages doorway', text: 'Start at Languages classroom.' },
     { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Corridor', text: 'Follow the corridor.' },
@@ -822,6 +823,82 @@
     ...chemToDhh
   ];
 
+  // Classroom to Mary Ward Hall routes
+  const langToMaryWard = [
+    { image: 'images/languages-step1.jpg', fallbackText: 'Languages doorway', text: 'Start at Languages classroom.' },
+    { image: 'images/b5c88bbc-ecde-446e-ab49-de4037dd675d.jpg', fallbackText: 'Corridor', text: 'Follow the corridor toward Mary Ward Hall.' },
+    { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward approach', text: 'Approach Mary Ward Hall entrance.' },
+    { image: 'images/mary-ward-interior.jpg', fallbackText: 'Mary Ward interior', text: 'Go inside Mary Ward Hall.' },
+    { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward doors', text: 'Enter through the wooden double doors.' }
+  ];
+
+  const artToMaryWard = [
+    { image: 'images/74d5c37b-204a-466e-8e46-bc6febc6a033.jpg', fallbackText: 'Art doorway', text: 'Start at Art classroom.' },
+    ...langToMaryWard.slice(1)
+  ];
+
+  const chemToMaryWard = [
+    { image: 'images/9305cd73-dd44-4050-902a-7eff483b86eb.jpg', fallbackText: 'Chemistry doorway', text: 'Start at Chemistry lab.' },
+    ...artToMaryWard
+  ];
+
+  const histToMaryWard = [
+    { image: 'images/00389644-3d13-44bd-8cac-62ec9f120b8e.jpg', fallbackText: 'History doorway', text: 'Start at History classroom.' },
+    ...chemToMaryWard
+  ];
+
+  // Inter-Room Doorway routes
+  const roomDoorways = {
+    'languages->art': [
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages doorway', text: 'Exit Languages classroom.' },
+      { image: 'images/art-doorway.jpg', fallbackText: 'Art doorway', text: 'Enter Art classroom.' }
+    ],
+    'languages->chemistry': [
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages doorway', text: 'Exit Languages classroom.' },
+      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry doorway', text: 'Enter Chemistry lab.' }
+    ],
+    'languages->history': [
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages doorway', text: 'Exit Languages classroom.' },
+      { image: 'images/history-doorway.jpg', fallbackText: 'History doorway', text: 'Enter History classroom.' }
+    ],
+    'art->languages': [
+      { image: 'images/74d5c37b-204a-466e-8e46-bc6febc6a033.jpg', fallbackText: 'Art doorway', text: 'Exit Art classroom.' },
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages doorway', text: 'Enter Languages classroom.' }
+    ],
+    'art->chemistry': [
+      { image: 'images/74d5c37b-204a-466e-8e46-bc6febc6a033.jpg', fallbackText: 'Art doorway', text: 'Exit Art classroom.' },
+      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry doorway', text: 'Enter Chemistry lab.' }
+    ],
+    'art->history': [
+      { image: 'images/74d5c37b-204a-466e-8e46-bc6febc6a033.jpg', fallbackText: 'Art doorway', text: 'Exit Art classroom.' },
+      { image: 'images/history-doorway.jpg', fallbackText: 'History doorway', text: 'Enter History classroom.' }
+    ],
+    'chemistry->languages': [
+      { image: 'images/9305cd73-dd44-4050-902a-7eff483b86eb.jpg', fallbackText: 'Chemistry doorway', text: 'Exit Chemistry lab.' },
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages doorway', text: 'Enter Languages classroom.' }
+    ],
+    'chemistry->art': [
+      { image: 'images/9305cd73-dd44-4050-902a-7eff483b86eb.jpg', fallbackText: 'Chemistry doorway', text: 'Exit Chemistry lab.' },
+      { image: 'images/art-doorway.jpg', fallbackText: 'Art doorway', text: 'Enter Art classroom.' }
+    ],
+    'chemistry->history': [
+      { image: 'images/9305cd73-dd44-4050-902a-7eff483b86eb.jpg', fallbackText: 'Chemistry doorway', text: 'Exit Chemistry lab.' },
+      { image: 'images/history-doorway.jpg', fallbackText: 'History doorway', text: 'Enter History classroom.' }
+    ],
+    'history->languages': [
+      { image: 'images/00389644-3d13-44bd-8cac-62ec9f120b8e.jpg', fallbackText: 'History doorway', text: 'Exit History classroom.' },
+      { image: 'images/language-doorway.jpg', fallbackText: 'Languages doorway', text: 'Enter Languages classroom.' }
+    ],
+    'history->art': [
+      { image: 'images/00389644-3d13-44bd-8cac-62ec9f120b8e.jpg', fallbackText: 'History doorway', text: 'Exit History classroom.' },
+      { image: 'images/art-doorway.jpg', fallbackText: 'Art doorway', text: 'Enter Art classroom.' }
+    ],
+    'history->chemistry': [
+      { image: 'images/00389644-3d13-44bd-8cac-62ec9f120b8e.jpg', fallbackText: 'History doorway', text: 'Exit History classroom.' },
+      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry doorway', text: 'Enter Chemistry lab.' }
+    ]
+  };
+
   createSteps = function (start, end, points) {
     if (end === 'newHall') {
       if (start === 'languages') return langToDhh;
@@ -829,6 +906,17 @@
       if (start === 'chemistry') return chemToDhh;
       if (start === 'history') return histToDhh;
     }
+
+    if (end === 'bigHall') {
+      if (start === 'languages') return langToMaryWard;
+      if (start === 'art') return artToMaryWard;
+      if (start === 'chemistry') return chemToMaryWard;
+      if (start === 'history') return histToMaryWard;
+    }
+
+    const key = `${start}->${end}`;
+    if (roomDoorways[key]) return roomDoorways[key];
+
     return previousCreateSteps(start, end, points);
   };
 })();
