@@ -819,3 +819,32 @@
 
 </body>
 </html>
+
+<script>
+(function () {
+  const originalCreateSteps = createSteps;
+  const delphineHartToMaryWard = [
+    { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Start inside Delphine Hart Hall and follow the corridor toward the exit.' },
+    { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway outside Delphine Hart Hall', text: 'Leave the hall and continue along the walkway beside the building.' },
+    { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'Follow the path beside the green stair tower toward the courtyard.' },
+    { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard toward Mary Ward Hall.' },
+    { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Walk up to the Mary Ward Hall entrance.' },
+    { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden doors.' }
+  ];
+  const languagesStep = { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Continue along the corridor to the Languages classroom doorway.' };
+  const artStep = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach the Art classroom.' };
+  const chemistryStep = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' };
+  const historyStep = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Follow the corridor to the green doorway to reach History.' };
+  const routes = {
+    bigHall: delphineHartToMaryWard,
+    languages: [...delphineHartToMaryWard, languagesStep],
+    art: [...delphineHartToMaryWard, languagesStep, artStep],
+    chemistry: [...delphineHartToMaryWard, languagesStep, artStep, chemistryStep],
+    history: [...delphineHartToMaryWard, languagesStep, artStep, chemistryStep, historyStep]
+  };
+  createSteps = function (start, end, points) {
+    if (start === 'newHall' && routes[end]) return routes[end];
+    return originalCreateSteps(start, end, points);
+  };
+})();
+</script>
