@@ -412,15 +412,22 @@
         { x: 82, y: 380 }
       ];
     }
+if (
+  (start === 'newHall' && end === 'bigHall') ||
+  (start === 'bigHall' && end === 'newHall')
+) 
+{
+  const route = [
+    { x: 163, y: 360 },  // Delphine Hart Hall right-side exit
+    { x: 163, y: 305 },  // Move up to lower walkway
+    { x: 470, y: 305 },  // Walk right, below Mary Ward Hall
+    { x: 470, y: 114 },  // Go around the right side of Mary Ward Hall
+    { x: 290, y: 114 },  // Walk left, below Block A corridor
+    { x: 290, y: 160 }   // Mary Ward Hall top entrance
+  ];
 
-    if ((start === 'bigHall' && end === 'newHall') || (start === 'newHall' && end === 'bigHall')) {
-      return [
-        { x: locs[start].x, y: locs[start].y },
-        { x: 82, y: LOWER_PASSAGE_Y },
-        { x: 290, y: LOWER_PASSAGE_Y },
-        { x: locs[end].x, y: locs[end].y }
-      ];
-    }
+  return start === 'newHall' ? route : [...route].reverse();
+}
 
     if (start === 'newHall' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
       return [
@@ -444,13 +451,21 @@
       ];
     }
 
-    if (start === 'gate2' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
-      return [
-        { x: 95, y: 55 },
-        { x: 95, y: 72 },
-        { x: p2.x, y: 72 }
-      ];
-    }
+   if (
+  (start === 'gate2' && end === 'newHall') ||
+  (start === 'newHall' && end === 'gate2')
+) {
+  const route = [
+    { x: 163, y: 360 },  // Delphine Hart Hall right-side exit
+    { x: 163, y: 305 },  // Lower walkway
+    { x: 470, y: 305 },  // Walk right, below Mary Ward Hall
+    { x: 470, y: 114 },  // Go around Mary Ward Hall's right side
+    { x: 95, y: 114 },   // Walk left, in front of Block A corridor
+    { x: 95, y: 55 }     // Reach Gate 2
+  ];
+
+  return start === 'newHall' ? route : [...route].reverse();
+}
 
     if (start === 'bigHall' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
       return [
