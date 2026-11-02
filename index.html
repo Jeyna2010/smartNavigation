@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>School Campus Navigator</title>
 
+  <!-- Tailwind CSS & Font Awesome -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -53,7 +52,7 @@
 
   <main class="max-w-6xl mx-auto px-4 py-4 w-full flex-grow flex flex-col gap-4">
 
-    <!-- Navigation Panel -->
+    <!-- Navigation Control Panel -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
       <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
 
@@ -70,7 +69,6 @@
 
               <select id="startSelect"
                 class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
-
                 <option value="gate2">Gate 2 (Main Entrance)</option>
                 <option value="bigHall">Mary Ward Hall</option>
                 <option value="newHall">Delphine Hart Hall</option>
@@ -95,7 +93,6 @@
 
               <select id="endSelect"
                 class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
-
                 <option value="bigHall">Mary Ward Hall</option>
                 <option value="newHall" selected>Delphine Hart Hall</option>
                 <option value="languages">Languages</option>
@@ -110,7 +107,7 @@
           </div>
         </div>
 
-        <!-- Buttons -->
+        <!-- Action Buttons -->
         <div class="flex items-end gap-2 pt-1 md:pt-0">
           <button id="showPathBtn" onclick="calculateRoute()"
             class="flex-1 md:flex-initial px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl shadow-sm flex items-center justify-center gap-2">
@@ -134,7 +131,7 @@
       </div>
     </div>
 
-    <!-- Map -->
+    <!-- Campus Map Canvas -->
     <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden flex-grow flex items-center justify-center min-h-[460px]">
       <canvas id="campusCanvas" width="800" height="520"
         class="max-w-full rounded-xl bg-slate-50 border border-slate-100">
@@ -167,10 +164,8 @@
 
       <!-- Modal Body -->
       <div class="p-5 flex-grow overflow-y-auto flex flex-col gap-4">
-
         <div class="relative w-full h-64 sm:h-80 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center">
-          <img id="modalImg" src="" alt="Route step visual"
-            class="w-full h-full object-cover">
+          <img id="modalImg" src="" alt="Route step visual" class="w-full h-full object-cover">
         </div>
 
         <div class="p-4 bg-blue-50/70 rounded-2xl border border-blue-100 flex items-start gap-3">
@@ -204,737 +199,521 @@
     </div>
   </div>
 
-<script>
-  const canvas = document.getElementById('campusCanvas');
-  const ctx = canvas.getContext('2d');
+  <script>
+    const canvas = document.getElementById('campusCanvas');
+    const ctx = canvas.getContext('2d');
 
-  const TOP_CORRIDOR_Y = 114;
-  const LOWER_PASSAGE_Y = 305;
-  const EAST_LOOP_X = 470;
-  const STAIRS_X = 317;
+    const TOP_CORRIDOR_Y = 114;
+    const LOWER_PASSAGE_Y = 305;
+    const EAST_LOOP_X = 470;
+    const STAIRS_X = 317;
 
-  // Campus locations
-  const locs = {
-    gate2: {
-      name: "Gate 2",
-      x: 95,
-      y: 35
-    },
-
-    gate3: {
-      name: "Gate 3 (Closed)",
-      x: 665,
-      y: 35
-    },
-
-    bigHall: {
-      name: "Mary Ward Hall",
-      x: 290,
-      y: 227
-    },
-
-    newHall: {
-      name: "Delphine Hart Hall",
-      x: 82,
-      y: 400
-    },
-
-    languages: {
-      name: "Languages",
-      x: 440,
-      y: 72
-    },
-
-    art: {
-      name: "Art",
-      x: 505,
-      y: 72
-    },
-
-    chemistry: {
-      name: "Chemistry",
-      x: 565,
-      y: 72
-    },
-
-    history: {
-      name: "History",
-      x: 625,
-      y: 72
-    }
-  };
-
-  let activePoints = [];
-  let activeRouteSteps = [];
-  let currentStepIdx = 0;
-  let animFrame = null;
-
-  // Draw the campus map
-  function drawCampusMap() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Campus boundary
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(15, 15, 770, 490);
-
-    // Gate 2
-    ctx.fillStyle = '#2563eb';
-    ctx.fillRect(65, 10, 60, 30);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillText('Gate 2', 76, 30);
-
-    // Gate 3
-    ctx.fillStyle = '#64748b';
-    ctx.fillRect(635, 10, 60, 30);
-
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText('Gate 3', 646, 24);
-
-    ctx.font = '8px Inter, sans-serif';
-    ctx.fillText('(Closed)', 648, 34);
-
-    // Block A Corridor
-    ctx.fillStyle = '#fcf2f6';
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 2.5;
-    ctx.fillRect(140, 50, 545, 42);
-    ctx.strokeRect(140, 50, 545, 42);
-
-    ctx.fillStyle = '#db2777';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillText('Block A Corridor', 185, 76);
-
-    // Block B rooms
-    const rooms = [
-      { name: 'Languages', x: 410, w: 60 },
-      { name: 'Art', x: 475, w: 55 },
-      { name: 'Chemistry', x: 535, w: 65 },
-      { name: 'History', x: 605, w: 70 }
-    ];
-
-    rooms.forEach(room => {
-      ctx.strokeStyle = '#db2777';
-      ctx.strokeRect(room.x, 50, room.w, 42);
-
-      ctx.fillStyle = '#9d174d';
-      ctx.font = 'bold 10px Inter, sans-serif';
-      ctx.fillText(room.name, room.x + 6, 75);
-    });
-
-    // Outdoor stairs
-    ctx.strokeStyle = '#475569';
-    ctx.lineWidth = 2;
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillRect(295, 96, 45, 20);
-    ctx.strokeRect(295, 96, 45, 20);
-
-    for (let sx = 302; sx < 338; sx += 7) {
-      ctx.beginPath();
-      ctx.moveTo(sx, 96);
-      ctx.lineTo(sx, 116);
-      ctx.stroke();
-    }
-
-    ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 8px Inter, sans-serif';
-    ctx.fillText('Outdoor Stairs', 296, 109);
-
-    // Mary Ward Hall
-    ctx.fillStyle = '#fce7f3';
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 2.5;
-    ctx.fillRect(170, 160, 240, 135);
-    ctx.strokeRect(170, 160, 240, 135);
-
-    // North entrance
-    ctx.strokeRect(265, 152, 40, 8);
-    ctx.fillRect(265, 152, 40, 8);
-
-    // South entrance
-    ctx.strokeRect(265, 295, 40, 8);
-    ctx.fillRect(265, 295, 40, 8);
-
-    ctx.fillStyle = '#9d174d';
-    ctx.font = 'bold 14px Inter, sans-serif';
-    ctx.fillText('Mary Ward Hall', 225, 220);
-
-    // Delphine Hart Hall
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 2.5;
-    ctx.fillStyle = '#fce7f3';
-    ctx.fillRect(30, 310, 125, 180);
-    ctx.strokeRect(30, 310, 125, 180);
-
-    // Side entrance
-    ctx.strokeRect(155, 345, 8, 30);
-    ctx.fillRect(155, 345, 8, 30);
-
-    // Main room
-    ctx.fillStyle = '#fbcfe8';
-    ctx.fillRect(40, 375, 105, 105);
-    ctx.strokeRect(40, 375, 105, 105);
-
-    ctx.fillStyle = '#9d174d';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillText('Delphine Hart', 48, 420);
-    ctx.fillText('Hall', 75, 438);
-
-    // Playground
-    ctx.strokeStyle = '#16a34a';
-    ctx.lineWidth = 2.5;
-    ctx.fillStyle = '#dcfce7';
-    ctx.fillRect(180, 320, 210, 150);
-    ctx.strokeRect(180, 320, 210, 150);
-
-    ctx.fillStyle = '#15803d';
-    ctx.font = 'bold 14px Inter, sans-serif';
-    ctx.fillText('Playground', 245, 400);
-
-    // Secondary playground
-    ctx.fillStyle = '#dcfce7';
-    ctx.fillRect(400, 345, 100, 125);
-    ctx.strokeRect(400, 345, 100, 125);
-
-    ctx.fillStyle = '#15803d';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText('Playground', 410, 410);
-
-    // Block B
-    ctx.strokeStyle = '#db2777';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(530, 180, 130, 140);
-    ctx.strokeRect(530, 180, 130, 140);
-
-    ctx.fillStyle = '#9d174d';
-    ctx.font = 'bold 15px Inter, sans-serif';
-    ctx.fillText('Block B', 565, 255);
-
-    // Canteen
-    ctx.strokeStyle = '#ea580c';
-    ctx.fillStyle = '#ffedd5';
-    ctx.fillRect(540, 355, 120, 90);
-    ctx.strokeRect(540, 355, 120, 90);
-
-    ctx.fillStyle = '#c2410c';
-    ctx.font = 'bold 13px Inter, sans-serif';
-    ctx.fillText('Canteen', 575, 405);
-
-    // Draw active route
-    if (activePoints.length > 1) {
-      ctx.beginPath();
-      ctx.moveTo(activePoints[0].x, activePoints[0].y);
-
-      for (let i = 1; i < activePoints.length; i++) {
-        ctx.lineTo(activePoints[i].x, activePoints[i].y);
-      }
-
-      ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 4;
-      ctx.setLineDash([8, 6]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Starting point
-      ctx.beginPath();
-      ctx.arc(activePoints[0].x, activePoints[0].y, 6, 0, Math.PI * 2);
-      ctx.fillStyle = '#16a34a';
-      ctx.fill();
-
-      // Destination
-      const last = activePoints[activePoints.length - 1];
-
-      ctx.beginPath();
-      ctx.arc(last.x, last.y, 7, 0, Math.PI * 2);
-      ctx.fillStyle = '#dc2626';
-      ctx.fill();
-
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
-  }
-
-  // Build a route between two locations
-  function buildRoute(start, end) {
-    const p1 = locs[start];
-    const p2 = locs[end];
-
-    // Gate 2 to Big Hall
-    if (start === 'gate2' && end === 'bigHall') {
-      return [
-        { x: 95, y: 55 },
-        { x: 95, y: TOP_CORRIDOR_Y },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: 290, y: 160 }
-      ];
-    }
-
-    // Gate 2 to New Hall
-    if (start === 'gate2' && end === 'newHall') {
-      return [
-        { x: 95, y: 55 },
-        { x: 95, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: 82, y: LOWER_PASSAGE_Y },
-        { x: 82, y: 380 }
-      ];
-    }
-
-    // Big Hall to New Hall
-    if (start === 'bigHall' && end === 'newHall') {
-      return [
-        { x: 290, y: 295 },
-        { x: 290, y: LOWER_PASSAGE_Y },
-        { x: 82, y: LOWER_PASSAGE_Y },
-        { x: 82, y: 380 }
-      ];
-    }
-
-    // New Hall to Block B rooms
-    if (start === 'newHall' &&
-        ['languages', 'art', 'chemistry', 'history'].includes(end)) {
-      return [
-        { x: 82, y: 380 },
-        { x: 82, y: LOWER_PASSAGE_Y },
-        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: p2.x, y: TOP_CORRIDOR_Y },
-        { x: p2.x, y: 92 }
-      ];
-    }
-
-    // Block B rooms to New Hall
-    if (end === 'newHall' &&
-        ['languages', 'art', 'chemistry', 'history'].includes(start)) {
-      return [
-        { x: p1.x, y: 92 },
-        { x: p1.x, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: 82, y: LOWER_PASSAGE_Y },
-        { x: 82, y: 380 }
-      ];
-    }
-
-    // Gate 2 to Block B rooms
-    if (start === 'gate2' &&
-        ['languages', 'art', 'chemistry', 'history'].includes(end)) {
-      return [
-        { x: 95, y: 55 },
-        { x: 95, y: 72 },
-        { x: p2.x, y: 72 }
-      ];
-    }
-
-    // Big Hall to Block B rooms
-    if (start === 'bigHall' &&
-        ['languages', 'art', 'chemistry', 'history'].includes(end)) {
-      return [
-        { x: 290, y: 160 },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: p2.x, y: TOP_CORRIDOR_Y },
-        { x: p2.x, y: 92 }
-      ];
-    }
-
-    // Block B rooms to Big Hall
-    if (end === 'bigHall' &&
-        ['languages', 'art', 'chemistry', 'history'].includes(start)) {
-      return [
-        { x: p1.x, y: 92 },
-        { x: p1.x, y: TOP_CORRIDOR_Y },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: 290, y: 160 }
-      ];
-    }
-
-    // Generic route for other combinations
-    return [
-      { x: p1.x, y: p1.y },
-      { x: p1.x, y: TOP_CORRIDOR_Y },
-      { x: p2.x, y: TOP_CORRIDOR_Y },
-      { x: p2.x, y: p2.y }
-    ];
-  }
-
-  // Generate photo guide steps
-  function createSteps(start, end, points) {
-    const startName = locs[start].name;
-    const endName = locs[end].name;
-
-    const photoGuides = {
-      'gate2->bigHall': [
-        { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
-        { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall approach', text: 'Cross the courtyard toward the steps and entrance shown in the photo.' },
-        { image: 'images/mary-ward-interior.jpg', fallbackText: 'Inside Mary Ward Hall', text: 'Go inside and continue through the building toward the hall.' },
-        { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'At the wooden double doors, enter Mary Ward Hall.' }
-      ],
-      'gate2->newHall': [
-        { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
-        { image: 'images/hart-courtyard.jpg', fallbackText: 'Courtyard and basketball court', text: 'Cross the courtyard, keeping the basketball court in view as you head toward the green stair tower.' },
-        { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'At the green stair tower, follow the path beside the building.' },
-        { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway to Delphine Hart Hall', text: 'Continue along the walkway beside the building toward the entrance.' },
-        { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Enter the building and follow the corridor to Delphine Hart Hall.' }
-      ]
+    // Campus locations
+    const locs = {
+      gate2: { name: "Gate 2", x: 95, y: 35 },
+      gate3: { name: "Gate 3 (Closed)", x: 665, y: 35 },
+      bigHall: { name: "Mary Ward Hall", x: 290, y: 227 },
+      newHall: { name: "Delphine Hart Hall", x: 82, y: 400 },
+      languages: { name: "Languages", x: 440, y: 72 },
+      art: { name: "Art", x: 505, y: 72 },
+      chemistry: { name: "Chemistry", x: 565, y: 72 },
+      history: { name: "History", x: 625, y: 72 }
     };
 
-    // The first three photos are shared because these routes follow the same
-    // path from Gate 2 before reaching their separate classroom doors.
-    const gateToLanguages = [
-      { image: 'images/gate2-entrance.jpg', fallbackText: 'Gate 2 entrance', text: 'Start at Gate 2 and walk through the covered entrance into the courtyard.' },
-      { image: 'images/language-corridor.jpg', fallbackText: 'Covered corridor beside green doors', text: 'Follow the covered corridor beside the green doors toward the classrooms.' },
-      { image: 'images/language-doorway.jpg', fallbackText: 'Classroom doorway along the corridor', text: 'Continue along the corridor to the Languages classroom entrance.' }
-    ];
+    let activePoints = [];
+    let activeRouteSteps = [];
+    let currentStepIdx = 0;
+    let animFrame = null;
 
-    photoGuides['gate2->languages'] = gateToLanguages;
-    photoGuides['gate2->art'] = [
-      ...gateToLanguages,
-      { image: 'images/art-doorway.jpg', fallbackText: 'Decorated Art classroom doorway', text: 'Continue to the decorated doorway shown here to reach the Art classroom.' }
-    ];
-    photoGuides['gate2->chemistry'] = [
-      ...photoGuides['gate2->art'],
-      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' }
-    ];
-    photoGuides['gate2->history'] = [
-      ...photoGuides['gate2->chemistry'],
-      { image: 'images/history-doorway.jpg', fallbackText: 'Green History classroom doorway', text: 'Follow the corridor to the green doorway shown here to reach History.' }
-    ];
-
-    // Mary Ward Hall to Delphine Hart Hall follows the five photos supplied.
-    photoGuides['bigHall->newHall'] = [
-      { image: 'images/maryward-courtyard.jpg', fallbackText: 'Steps from Mary Ward Hall to the courtyard', text: 'Leave Mary Ward Hall and go down the steps into the courtyard.' },
-      { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard and basketball court', text: 'Cross the courtyard toward the green outdoor stair tower.' },
-      { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'At the green stair tower, follow the path beside the building.' },
-      { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway beside the building', text: 'Continue along the walkway toward Delphine Hart Hall.' },
-      { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Enter the building and follow the corridor to Delphine Hart Hall.' }
-    ];
-
-    // The first three photos are shared across the classroom routes from Mary Ward Hall.
-    const maryWardToLanguages = [
-      { image: 'images/maryward-courtyard.jpg', fallbackText: 'Steps from Mary Ward Hall to the courtyard', text: 'Leave Mary Ward Hall and go down the steps into the courtyard.' },
-      { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance steps', text: 'Go up the steps to the Block A entrance and continue inside.' },
-      { image: 'images/language-doorway.jpg', fallbackText: 'Languages corridor doorway', text: 'Follow the corridor to the Languages classroom doorway.' }
-    ];
-
-    photoGuides['bigHall->languages'] = maryWardToLanguages;
-    photoGuides['bigHall->art'] = [
-      ...maryWardToLanguages,
-      { image: 'images/art-doorway.jpg', fallbackText: 'Decorated Art classroom doorway', text: 'Continue to the decorated doorway shown here to reach the Art classroom.' }
-    ];
-    photoGuides['bigHall->chemistry'] = [
-      ...photoGuides['bigHall->art'],
-      { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' }
-    ];
-    photoGuides['bigHall->history'] = [
-      ...photoGuides['bigHall->chemistry'],
-      { image: 'images/history-doorway.jpg', fallbackText: 'Green History classroom doorway', text: 'Follow the corridor to the green doorway shown here to reach History.' }
-    ];
-
-    
-    const routeKey = `${start}->${end}`;
-    if (photoGuides[routeKey]) return photoGuides[routeKey];
-
-    return [
-      { fallbackText: 'Starting Point', text: `Start at ${startName} and follow the marked route.` },
-      { fallbackText: 'Campus Corridor', text: 'Follow the corridor or pathway shown on the map. Continue along the highlighted route.' },
-      { fallbackText: 'Destination', text: `Follow the final pathway to reach ${endName}.` }
-    ];
-  }
-
-  // Calculate and display route
-  function calculateRoute() {
-    const start = document.getElementById('startSelect').value;
-    const end = document.getElementById('endSelect').value;
-
-    const msgBox = document.getElementById('msgBox');
-    const msgText = document.getElementById('msgText');
-    const takeMeBtn = document.getElementById('takeMeBtn');
-
-    if (start === end) {
-      msgText.innerText = 'Please select two different locations to calculate the route.';
-      msgBox.classList.remove('hidden');
-      takeMeBtn.disabled = true;
-      activePoints = [];
-      activeRouteSteps = [];
-      drawCampusMap();
-      return;
+    // Helper function to create blank image slots easily
+    function makeBlankSteps(count, routeId) {
+      const steps = [];
+      for (let i = 1; i <= count; i++) {
+        steps.push({
+          image: `images/${routeId}-step-${i}.jpg`,
+          fallbackText: `${routeId} Step ${i}`,
+          text: `Instruction for step ${i}`
+        });
+      }
+      return steps;
     }
 
-    msgBox.classList.add('hidden');
+    // Shared base image sequence for Delphine Hart Hall to classrooms
+    const delphineHartBaseSequence = [
+      { image: 'images/6d8905f9-0ab9-45f2-8cb0-517d7ab9ca24.jpg', fallbackText: 'Delphine Hart Hall Exit', text: 'Start inside Delphine Hart Hall and head toward the main exit.' },
+      { image: 'images/a3e4a296-f4c3-4f63-97f6-ae7ebf380653.jpg', fallbackText: 'Outside Walkway', text: 'Walk along the outdoor pathway beside the hall.' },
+      { image: 'images/6a6c61a0-0748-49fd-9e8b-075b7973cb7f.jpg', fallbackText: 'Outdoor Stair Tower', text: 'Pass beside the green outdoor stair tower.' },
+      { image: 'images/e72c10ad-eb93-4a69-9833-af86593084f6.jpg', fallbackText: 'Courtyard Crossing', text: 'Cross the courtyard toward the main building entrance.' },
+      { image: 'images/e76c7155-ce88-463e-adcc-215349589fdf.jpg', fallbackText: 'Main Entrance Approach', text: 'Approach the entrance leading up to the classroom corridor.' },
+      { image: 'images/block-a-entry.jpg', fallbackText: 'Block A Entrance', text: 'Enter Block A and proceed into the main hallway.' }
+    ];
 
-    let points = buildRoute(start, end);
+    const langDoorStep = { image: 'images/language-doorway.jpg', fallbackText: 'Languages Doorway', text: 'Arrive at the Languages classroom doorway.' };
+    const artDoorStep = { image: 'images/art-doorway.jpg', fallbackText: 'Art Doorway', text: 'Continue along the corridor to the Art classroom doorway.' };
+    const chemDoorStep = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry Doorway', text: 'Continue further along to the Chemistry lab doorway.' };
+    const histDoorStep = { image: 'images/history-doorway.jpg', fallbackText: 'History Doorway', text: 'Follow the corridor to the History room entrance.' };
 
-    // Reverse route if needed
-    const reversePoints = buildRoute(end, start);
+    // Master Photo Guide Database
+    const photoGuides = {
+      // Gate 2 routes
+      'gate2->bigHall': makeBlankSteps(4, 'gate2-bigHall'),
+      'gate2->newHall': makeBlankSteps(5, 'gate2-newHall'),
+      'gate2->languages': makeBlankSteps(3, 'gate2-languages'),
+      'gate2->art': makeBlankSteps(4, 'gate2-art'),
+      'gate2->chemistry': makeBlankSteps(5, 'gate2-chemistry'),
+      'gate2->history': makeBlankSteps(6, 'gate2-history'),
 
-    if (start !== 'gate2' && end !== 'gate2' &&
-        start !== 'newHall' && end !== 'newHall' &&
-        start !== 'bigHall' && end !== 'bigHall') {
-      points = [
-        { x: locs[start].x, y: locs[start].y },
-        { x: locs[start].x, y: TOP_CORRIDOR_Y },
-        { x: locs[end].x, y: TOP_CORRIDOR_Y },
-        { x: locs[end].x, y: locs[end].y }
+      // Mary Ward Hall (bigHall) routes
+      'bigHall->newHall': makeBlankSteps(5, 'bigHall-newHall'),
+      'bigHall->languages': makeBlankSteps(3, 'bigHall-languages'),
+      'bigHall->art': makeBlankSteps(4, 'bigHall-art'),
+      'bigHall->chemistry': makeBlankSteps(5, 'bigHall-chemistry'),
+      'bigHall->history': makeBlankSteps(6, 'bigHall-history'),
+
+      // Delphine Hart Hall (newHall) routes
+      'newHall->bigHall': makeBlankSteps(5, 'newHall-bigHall'),
+      'newHall->languages': [...delphineHartBaseSequence, langDoorStep],
+      'newHall->art': [...delphineHartBaseSequence, langDoorStep, artDoorStep],
+      'newHall->chemistry': [...delphineHartBaseSequence, langDoorStep, artDoorStep, chemDoorStep],
+      'newHall->history': [...delphineHartBaseSequence, langDoorStep, artDoorStep, chemDoorStep, histDoorStep],
+      'newHall->gate2': makeBlankSteps(5, 'newHall-gate2'),
+
+      // Languages routes
+      'languages->newHall': makeBlankSteps(6, 'languages-newHall'),
+      'languages->bigHall': makeBlankSteps(3, 'languages-bigHall'),
+      'languages->history': makeBlankSteps(2, 'languages-history'),
+      'languages->chemistry': makeBlankSteps(2, 'languages-chemistry'),
+      'languages->art': makeBlankSteps(2, 'languages-art'),
+      'languages->gate2': makeBlankSteps(2, 'languages-gate2'),
+
+      // History routes
+      'history->newHall': makeBlankSteps(5, 'history-newHall'),
+      'history->bigHall': makeBlankSteps(3, 'history-bigHall'),
+      'history->gate2': makeBlankSteps(1, 'history-gate2'),
+      'history->chemistry': makeBlankSteps(2, 'history-chemistry'),
+      'history->art': makeBlankSteps(2, 'history-art'),
+      'history->languages': makeBlankSteps(2, 'history-languages'),
+
+      // Chemistry routes
+      'chemistry->newHall': makeBlankSteps(5, 'chemistry-newHall'),
+      'chemistry->bigHall': makeBlankSteps(2, 'chemistry-bigHall'),
+      'chemistry->history': makeBlankSteps(2, 'chemistry-history'),
+      'chemistry->art': makeBlankSteps(2, 'chemistry-art'),
+      'chemistry->languages': makeBlankSteps(2, 'chemistry-languages'),
+      'chemistry->gate2': makeBlankSteps(2, 'chemistry-gate2'),
+
+      // Art routes
+      'art->bigHall': makeBlankSteps(3, 'art-bigHall'),
+      'art->newHall': makeBlankSteps(5, 'art-newHall'),
+      'art->gate2': makeBlankSteps(2, 'art-gate2'),
+      'art->history': makeBlankSteps(2, 'art-history'),
+      'art->languages': makeBlankSteps(2, 'art-languages'),
+      'art->chemistry': makeBlankSteps(2, 'art-chemistry')
+    };
+
+    // Draw campus map canvas
+    function drawCampusMap() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Campus boundary
+      ctx.strokeStyle = '#db2777';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(15, 15, 770, 490);
+
+      // Gate 2
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(65, 10, 60, 30);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.fillText('Gate 2', 76, 30);
+
+      // Gate 3
+      ctx.fillStyle = '#64748b';
+      ctx.fillRect(635, 10, 60, 30);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px Inter, sans-serif';
+      ctx.fillText('Gate 3', 646, 24);
+      ctx.font = '8px Inter, sans-serif';
+      ctx.fillText('(Closed)', 648, 34);
+
+      // Block A Corridor
+      ctx.fillStyle = '#fcf2f6';
+      ctx.strokeStyle = '#db2777';
+      ctx.lineWidth = 2.5;
+      ctx.fillRect(140, 50, 545, 42);
+      ctx.strokeRect(140, 50, 545, 42);
+      ctx.fillStyle = '#db2777';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.fillText('Block A Corridor', 185, 76);
+
+      // Block B rooms
+      const rooms = [
+        { name: 'Languages', x: 410, w: 60 },
+        { name: 'Art', x: 475, w: 55 },
+        { name: 'Chemistry', x: 535, w: 65 },
+        { name: 'History', x: 605, w: 70 }
       ];
-    }
 
-    activePoints = points;
-    activeRouteSteps = createSteps(start, end, points);
+      rooms.forEach(room => {
+        ctx.strokeStyle = '#db2777';
+        ctx.strokeRect(room.x, 50, room.w, 42);
+        ctx.fillStyle = '#9d174d';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText(room.name, room.x + 6, 75);
+      });
 
-    takeMeBtn.disabled = false;
+      // Outdoor stairs
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 2;
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(295, 96, 45, 20);
+      ctx.strokeRect(295, 96, 45, 20);
 
-    animatePath(points);
-  }
-
-  // Animate the route
-  function animatePath(points) {
-    if (animFrame) cancelAnimationFrame(animFrame);
-
-    let segment = 0;
-    let progress = 0;
-
-    function step() {
-      drawCampusMap();
-
-      if (segment < points.length - 1) {
-        const p1 = points[segment];
-        const p2 = points[segment + 1];
-
-        const currX = p1.x + (p2.x - p1.x) * progress;
-        const currY = p1.y + (p2.y - p1.y) * progress;
-
-        // Moving dot
+      for (let sx = 302; sx < 338; sx += 7) {
         ctx.beginPath();
-        ctx.arc(currX, currY, 8, 0, Math.PI * 2);
-        ctx.fillStyle = '#2563eb';
+        ctx.moveTo(sx, 96);
+        ctx.lineTo(sx, 116);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#1e293b';
+      ctx.font = 'bold 8px Inter, sans-serif';
+      ctx.fillText('Outdoor Stairs', 296, 109);
+
+      // Mary Ward Hall
+      ctx.fillStyle = '#fce7f3';
+      ctx.strokeStyle = '#db2777';
+      ctx.lineWidth = 2.5;
+      ctx.fillRect(170, 160, 240, 135);
+      ctx.strokeRect(170, 160, 240, 135);
+
+      // North & South entrances
+      ctx.strokeRect(265, 152, 40, 8);
+      ctx.fillRect(265, 152, 40, 8);
+      ctx.strokeRect(265, 295, 40, 8);
+      ctx.fillRect(265, 295, 40, 8);
+
+      ctx.fillStyle = '#9d174d';
+      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.fillText('Mary Ward Hall', 225, 220);
+
+      // Delphine Hart Hall
+      ctx.strokeStyle = '#db2777';
+      ctx.lineWidth = 2.5;
+      ctx.fillStyle = '#fce7f3';
+      ctx.fillRect(30, 310, 125, 180);
+      ctx.strokeRect(30, 310, 125, 180);
+
+      ctx.strokeRect(155, 345, 8, 30);
+      ctx.fillRect(155, 345, 8, 30);
+
+      ctx.fillStyle = '#fbcfe8';
+      ctx.fillRect(40, 375, 105, 105);
+      ctx.strokeRect(40, 375, 105, 105);
+
+      ctx.fillStyle = '#9d174d';
+      ctx.font = 'bold 12px Inter, sans-serif';
+      ctx.fillText('Delphine Hart', 48, 420);
+      ctx.fillText('Hall', 75, 438);
+
+      // Playground
+      ctx.strokeStyle = '#16a34a';
+      ctx.lineWidth = 2.5;
+      ctx.fillStyle = '#dcfce7';
+      ctx.fillRect(180, 320, 210, 150);
+      ctx.strokeRect(180, 320, 210, 150);
+      ctx.fillStyle = '#15803d';
+      ctx.font = 'bold 14px Inter, sans-serif';
+      ctx.fillText('Playground', 245, 400);
+
+      // Secondary playground
+      ctx.fillStyle = '#dcfce7';
+      ctx.fillRect(400, 345, 100, 125);
+      ctx.strokeRect(400, 345, 100, 125);
+      ctx.fillStyle = '#15803d';
+      ctx.font = 'bold 11px Inter, sans-serif';
+      ctx.fillText('Playground', 410, 410);
+
+      // Block B
+      ctx.strokeStyle = '#db2777';
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(530, 180, 130, 140);
+      ctx.strokeRect(530, 180, 130, 140);
+      ctx.fillStyle = '#9d174d';
+      ctx.font = 'bold 15px Inter, sans-serif';
+      ctx.fillText('Block B', 565, 255);
+
+      // Canteen
+      ctx.strokeStyle = '#ea580c';
+      ctx.fillStyle = '#ffedd5';
+      ctx.fillRect(540, 355, 120, 90);
+      ctx.strokeRect(540, 355, 120, 90);
+      ctx.fillStyle = '#c2410c';
+      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.fillText('Canteen', 575, 405);
+
+      // Active Route
+      if (activePoints.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(activePoints[0].x, activePoints[0].y);
+
+        for (let i = 1; i < activePoints.length; i++) {
+          ctx.lineTo(activePoints[i].x, activePoints[i].y);
+        }
+
+        ctx.strokeStyle = '#dc2626';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([8, 6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.beginPath();
+        ctx.arc(activePoints[0].x, activePoints[0].y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#16a34a';
         ctx.fill();
 
+        const last = activePoints[activePoints.length - 1];
+        ctx.beginPath();
+        ctx.arc(last.x, last.y, 7, 0, Math.PI * 2);
+        ctx.fillStyle = '#dc2626';
+        ctx.fill();
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
         ctx.stroke();
-
-        progress += 0.04;
-
-        if (progress >= 1) {
-          progress = 0;
-          segment++;
-        }
-
-        animFrame = requestAnimationFrame(step);
-      } else {
-        drawCampusMap();
       }
     }
 
-    step();
-  }
+    // Build map route points
+    function buildRoute(start, end) {
+      const p1 = locs[start];
+      const p2 = locs[end];
 
-  // Open photo guide
-  function openStepViewer() {
-    if (!activeRouteSteps.length) return;
+      if (start === 'gate2' && end === 'bigHall') {
+        return [
+          { x: 95, y: 55 },
+          { x: 95, y: TOP_CORRIDOR_Y },
+          { x: 290, y: TOP_CORRIDOR_Y },
+          { x: 290, y: 160 }
+        ];
+      }
 
-    currentStepIdx = 0;
-    updateModalStep();
+      if (start === 'gate2' && end === 'newHall') {
+        return [
+          { x: 95, y: 55 },
+          { x: 95, y: TOP_CORRIDOR_Y },
+          { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+          { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+          { x: 82, y: LOWER_PASSAGE_Y },
+          { x: 82, y: 380 }
+        ];
+      }
 
-    const modal = document.getElementById('photoModal');
-    modal.classList.remove('hidden');
-    modal.classList.add('flex');
-  }
+      if (start === 'bigHall' && end === 'newHall') {
+        return [
+          { x: 290, y: 295 },
+          { x: 290, y: LOWER_PASSAGE_Y },
+          { x: 82, y: LOWER_PASSAGE_Y },
+          { x: 82, y: 380 }
+        ];
+      }
 
-  // Close photo guide
-  function closeStepViewer() {
-    const modal = document.getElementById('photoModal');
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-  }
+      if (start === 'newHall' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+        return [
+          { x: 82, y: 380 },
+          { x: 82, y: LOWER_PASSAGE_Y },
+          { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+          { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+          { x: p2.x, y: TOP_CORRIDOR_Y },
+          { x: p2.x, y: 92 }
+        ];
+      }
 
-  // Change photo guide step
-  function changeStep(dir) {
-    currentStepIdx += dir;
+      if (end === 'newHall' && ['languages', 'art', 'chemistry', 'history'].includes(start)) {
+        return [
+          { x: p1.x, y: 92 },
+          { x: p1.x, y: TOP_CORRIDOR_Y },
+          { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+          { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+          { x: 82, y: LOWER_PASSAGE_Y },
+          { x: 82, y: 380 }
+        ];
+      }
 
-    if (currentStepIdx < 0) {
+      if (start === 'gate2' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+        return [
+          { x: 95, y: 55 },
+          { x: 95, y: 72 },
+          { x: p2.x, y: 72 }
+        ];
+      }
+
+      if (start === 'bigHall' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+        return [
+          { x: 290, y: 160 },
+          { x: 290, y: TOP_CORRIDOR_Y },
+          { x: p2.x, y: TOP_CORRIDOR_Y },
+          { x: p2.x, y: 92 }
+        ];
+      }
+
+      if (end === 'bigHall' && ['languages', 'art', 'chemistry', 'history'].includes(start)) {
+        return [
+          { x: p1.x, y: 92 },
+          { x: p1.x, y: TOP_CORRIDOR_Y },
+          { x: 290, y: TOP_CORRIDOR_Y },
+          { x: 290, y: 160 }
+        ];
+      }
+
+      return [
+        { x: p1.x, y: p1.y },
+        { x: p1.x, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: p2.y }
+      ];
+    }
+
+    // Get steps based on route key
+    function getRouteSteps(start, end) {
+      const key = `${start}->${end}`;
+      if (photoGuides[key]) return photoGuides[key];
+
+      // Generic fallback
+      return [
+        { image: 'images/start.jpg', fallbackText: 'Start Location', text: `Start at ${locs[start].name}.` },
+        { image: 'images/destination.jpg', fallbackText: 'Destination', text: `Walk to ${locs[end].name}.` }
+      ];
+    }
+
+    // Calculate and trigger route display
+    function calculateRoute() {
+      const start = document.getElementById('startSelect').value;
+      const end = document.getElementById('endSelect').value;
+      const msgBox = document.getElementById('msgBox');
+      const msgText = document.getElementById('msgText');
+      const takeMeBtn = document.getElementById('takeMeBtn');
+
+      if (start === end) {
+        msgText.innerText = 'Please select two different locations to calculate the route.';
+        msgBox.classList.remove('hidden');
+        takeMeBtn.disabled = true;
+        activePoints = [];
+        activeRouteSteps = [];
+        drawCampusMap();
+        return;
+      }
+
+      msgBox.classList.add('hidden');
+      const points = buildRoute(start, end);
+
+      activePoints = points;
+      activeRouteSteps = getRouteSteps(start, end);
+      takeMeBtn.disabled = false;
+
+      animatePath(points);
+    }
+
+    // Animate map drawing
+    function animatePath(points) {
+      if (animFrame) cancelAnimationFrame(animFrame);
+
+      let segment = 0;
+      let progress = 0;
+
+      function step() {
+        drawCampusMap();
+
+        if (segment < points.length - 1) {
+          const p1 = points[segment];
+          const p2 = points[segment + 1];
+
+          const currX = p1.x + (p2.x - p1.x) * progress;
+          const currY = p1.y + (p2.y - p1.y) * progress;
+
+          ctx.beginPath();
+          ctx.arc(currX, currY, 8, 0, Math.PI * 2);
+          ctx.fillStyle = '#2563eb';
+          ctx.fill();
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          progress += 0.04;
+          if (progress >= 1) {
+            progress = 0;
+            segment++;
+          }
+
+          animFrame = requestAnimationFrame(step);
+        } else {
+          drawCampusMap();
+        }
+      }
+
+      step();
+    }
+
+    // Open Modal Guide
+    function openStepViewer() {
+      if (!activeRouteSteps.length) return;
       currentStepIdx = 0;
+      updateModalStep();
+
+      const modal = document.getElementById('photoModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
-    if (currentStepIdx >= activeRouteSteps.length) {
-      currentStepIdx = activeRouteSteps.length - 1;
+    // Close Modal Guide
+    function closeStepViewer() {
+      const modal = document.getElementById('photoModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
-    updateModalStep();
-  }
+    // Modal step navigation
+    function changeStep(dir) {
+      currentStepIdx += dir;
+      if (currentStepIdx < 0) currentStepIdx = 0;
+      if (currentStepIdx >= activeRouteSteps.length) {
+        currentStepIdx = activeRouteSteps.length - 1;
+      }
+      updateModalStep();
+    }
 
-  // Update photo guide content
-  function updateModalStep() {
-    const step = activeRouteSteps[currentStepIdx];
+    // Update step UI content
+    function updateModalStep() {
+      const step = activeRouteSteps[currentStepIdx];
+      const startName = locs[document.getElementById('startSelect').value].name;
+      const endName = locs[document.getElementById('endSelect').value].name;
 
-    const startName = locs[document.getElementById('startSelect').value].name;
-    const endName = locs[document.getElementById('endSelect').value].name;
+      document.getElementById('modalTitle').innerText = `${startName} ➔ ${endName}`;
+      document.getElementById('modalSubtitle').innerText = `Step ${currentStepIdx + 1} of ${activeRouteSteps.length}`;
+      document.getElementById('stepNumber').innerText = currentStepIdx + 1;
+      document.getElementById('modalInstruction').innerText = step.text;
+      document.getElementById('stepCounterText').innerText = `Step ${currentStepIdx + 1} / ${activeRouteSteps.length}`;
 
-    document.getElementById('modalTitle').innerText =
-      `${startName} ➔ ${endName}`;
+      const imgEl = document.getElementById('modalImg');
+      const imageText = encodeURIComponent(step.fallbackText || 'Route step');
+      const placeholderSrc = `https://placehold.co/600x400/2563eb/ffffff?text=${imageText}`;
 
-    document.getElementById('modalSubtitle').innerText =
-      `Step ${currentStepIdx + 1} of ${activeRouteSteps.length}`;
+      imgEl.alt = step.fallbackText || 'Route step visual';
+      imgEl.onerror = function() {
+        imgEl.onerror = null;
+        imgEl.src = placeholderSrc;
+      };
+      imgEl.src = step.image || placeholderSrc;
 
-    document.getElementById('stepNumber').innerText =
-      currentStepIdx + 1;
+      document.getElementById('prevStepBtn').disabled = (currentStepIdx === 0);
+      document.getElementById('nextStepBtn').disabled = (currentStepIdx === activeRouteSteps.length - 1);
+    }
 
-    document.getElementById('modalInstruction').innerText =
-      step.text;
-
-    document.getElementById('stepCounterText').innerText =
-      `Step ${currentStepIdx + 1} / ${activeRouteSteps.length}`;
-
-    const imgEl = document.getElementById('modalImg');
-
-    const imageText = encodeURIComponent(step.fallbackText || 'Route step');
-    const placeholderSrc =
-      `https://placehold.co/600x400/2563eb/ffffff?text=${imageText}`;
-
-    imgEl.alt = step.fallbackText || 'Route step visual';
-    imgEl.onerror = function() {
-      imgEl.onerror = null;
-      imgEl.src = placeholderSrc;
+    // Initialize map on page load
+    window.onload = function() {
+      drawCampusMap();
+      calculateRoute();
     };
-    imgEl.src = step.image || placeholderSrc;
-
-    document.getElementById('prevStepBtn').disabled =
-      currentStepIdx === 0;
-
-    document.getElementById('nextStepBtn').disabled =
-      currentStepIdx === activeRouteSteps.length - 1;
-  }
-
-  // Initial setup
-  window.onload = function() {
-    drawCampusMap();
-    calculateRoute();
-  };
-</script>
+  </script>
 
 </body>
 </html>
-
-<script>
-(function () {
-  const originalCreateSteps = createSteps;
-  const delphineHartToMaryWard = [
-    { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Start inside Delphine Hart Hall and follow the corridor toward the exit.' },
-    { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway outside Delphine Hart Hall', text: 'Leave the hall and continue along the walkway beside the building.' },
-    { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'Follow the path beside the green stair tower toward the courtyard.' },
-    { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard toward Mary Ward Hall.' },
-    { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Walk up to the Mary Ward Hall entrance.' },
-    { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden doors.' }
-  ];
-  const languagesStep = { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Continue along the corridor to the Languages classroom doorway.' };
-  const artStep = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach the Art classroom.' };
-  const chemistryStep = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' };
-  const historyStep = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Follow the corridor to the green doorway to reach History.' };
-  const routes = {
-    bigHall: delphineHartToMaryWard,
-    languages: [...delphineHartToMaryWard, languagesStep],
-    art: [...delphineHartToMaryWard, languagesStep, artStep],
-    chemistry: [...delphineHartToMaryWard, languagesStep, artStep, chemistryStep],
-    history: [...delphineHartToMaryWard, languagesStep, artStep, chemistryStep, historyStep]
-  };
-  createSteps = function (start, end, points) {
-    if (start === 'newHall' && routes[end]) return routes[end];
-    return originalCreateSteps(start, end, points);
-  };
-})();
-</script>
-
-<script>
-(function () {
-  const earlierCreateSteps = createSteps;
-  const dhhToLanguages = [
-    { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Start at Delphine Hart Hall and follow the corridor to the exit.' },
-    { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway beside Delphine Hart Hall', text: 'Follow the walkway away from Delphine Hart Hall.' },
-    { image: 'images/hart-courtyard.jpg', fallbackText: 'Courtyard route toward the classrooms', text: 'Continue through the courtyard toward the Block A classroom corridor.' },
-    { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'Pass the green stair tower and continue toward the classroom wing.' },
-    { image: 'images/language-corridor.jpg', fallbackText: 'Classroom corridor', text: 'Follow the corridor along the classroom wing.' },
-    { image: 'images/block-a-entry.jpg', fallbackText: 'Block A classroom entrance', text: 'Enter the Block A corridor and continue to the Languages classroom.' },
-    { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Stop at the Languages classroom doorway.' }
-  ];
-  const artStep = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach Art.' };
-  const chemistryStep = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' };
-  const historyStep = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Continue to the green doorway to reach History.' };
-  const routes = {
-    bigHall: earlierCreateSteps('newHall', 'bigHall', []),
-    languages: dhhToLanguages,
-    art: [...dhhToLanguages, artStep],
-    chemistry: [...dhhToLanguages, artStep, chemistryStep],
-    history: [...dhhToLanguages, artStep, chemistryStep, historyStep]
-  };
-  createSteps = function (start, end, points) {
-    if (start === 'newHall' && routes[end]) return routes[end];
-    return earlierCreateSteps(start, end, points);
-  };
-})();
-</script>
-
-<script>
-(function () {
-  const previousCreateSteps = createSteps;
-  const dhhClassroomBase = [
-    { image: 'images/block-a-entry.jpg', fallbackText: 'Block A classroom entrance', text: 'From Delphine Hart Hall, head to the Block A classroom entrance.' },
-    { image: 'images/language-corridor.jpg', fallbackText: 'Classroom corridor', text: 'Follow the classroom corridor toward the destination.' }
-  ];
-  const languageDoor = { image: 'images/language-doorway.jpg', fallbackText: 'Languages classroom doorway', text: 'Continue to the Languages classroom doorway.' };
-  const artDoor = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue along the corridor to the Art classroom doorway.' };
-  const chemistryDoor = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the Chemistry classroom doorway.' };
-  const historyDoor = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Continue to the History classroom doorway.' };
-  const directRoutes = {
-    languages: [...dhhClassroomBase, languageDoor],
-    art: [...dhhClassroomBase, languageDoor, artDoor],
-    chemistry: [...dhhClassroomBase, languageDoor, artDoor, chemistryDoor],
-    history: [...dhhClassroomBase, languageDoor, artDoor, chemistryDoor, historyDoor]
-  };
-  createSteps = function (start, end, points) {
-    if (start === 'newHall' && end === 'bigHall') {
-      return previousCreateSteps(start, end, points);
-    }
-    if (start === 'newHall' && directRoutes[end]) return directRoutes[end];
-    return previousCreateSteps(start, end, points);
-  };
-})();
-</script>
-
-<script>console.log('route fix checkpoint')</script>
-<script>
-(function () {
-  const originalCreateSteps = createSteps;
-  const dhhToMaryWard = [
-    { image: 'images/hart-hallway.jpg', fallbackText: 'Delphine Hart Hall corridor', text: 'Start inside Delphine Hart Hall and follow the corridor toward the exit.' },
-    { image: 'images/hart-walkway.jpg', fallbackText: 'Walkway outside Delphine Hart Hall', text: 'Leave the hall and continue along the walkway beside the building.' },
-    { image: 'images/hart-stairway.jpg', fallbackText: 'Green outdoor stair tower', text: 'Follow the path beside the green stair tower toward the courtyard.' },
-    { image: 'images/maryward-courtyard-crossing.jpg', fallbackText: 'Courtyard crossing', text: 'Cross the courtyard toward Mary Ward Hall.' },
-    { image: 'images/mary-ward-approach.jpg', fallbackText: 'Mary Ward Hall entrance approach', text: 'Walk up to the Mary Ward Hall entrance.' },
-    { image: 'images/mary-ward-doors.jpg', fallbackText: 'Mary Ward Hall doors', text: 'Enter Mary Ward Hall through the wooden doors.' }
-  ];
-  const dhhToClassrooms = [
-    ...dhhToMaryWard.slice(0, 5),
-    { image: 'images/block-a-entry.jpg', fallbackText: 'Block A entrance', text: 'Continue through the Block A entrance.' },
-    { image: 'images/language-corridor.jpg', fallbackText: 'Classroom corridor', text: 'Follow the corridor to the classroom wing.' }
-  ];
-  const artDoor = { image: 'images/art-doorway.jpg', fallbackText: 'Art classroom doorway', text: 'Continue to the decorated doorway to reach Art.' };
-  const chemistryDoor = { image: 'images/chemistry-doorway.jpg', fallbackText: 'Chemistry classroom doorway', text: 'Continue to the doorway with the science flask display to reach Chemistry.' };
-  const historyDoor = { image: 'images/history-doorway.jpg', fallbackText: 'History classroom doorway', text: 'Follow the corridor to the green doorway to reach History.' };
-  const routes = {
-    bigHall: dhhToMaryWard,
-    languages: dhhToClassrooms,
-    art: [...dhhToClassrooms, artDoor],
-    chemistry: [...dhhToClassrooms, artDoor, chemistryDoor],
-    history: [...dhhToClassrooms, artDoor, chemistryDoor, historyDoor]
-  };
-  createSteps = function (start, end, points) {
-    if (start === 'newHall' && routes[end]) return routes[end];
-    return originalCreateSteps(start, end, points);
-  };
-})();
-</script>
