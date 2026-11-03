@@ -405,26 +405,28 @@
       ];
     }
 
+    // Delphine Hart Hall <-> Gate 2 (updated per first picture)
     if ((start === 'gate2' && end === 'newHall') || (start === 'newHall' && end === 'gate2')) {
       const route = [
-        { x: 95, y: 55 },
-        { x: 95, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+        { x: 80, y: 40 },
+        { x: 80, y: 135 },
+        { x: 477, y: 135 },
+        { x: 477, y: LOWER_PASSAGE_Y },
         { x: 163, y: LOWER_PASSAGE_Y },
         { x: 163, y: 360 }
       ];
       return start === 'gate2' ? route : [...route].reverse();
     }
 
+    // Delphine Hart Hall <-> Mary Ward Hall (updated per second picture)
     if ((start === 'bigHall' && end === 'newHall') || (start === 'newHall' && end === 'bigHall')) {
       const route = [
         { x: 163, y: 360 },
         { x: 163, y: LOWER_PASSAGE_Y },
-        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: 290, y: 160 }
+        { x: 460, y: LOWER_PASSAGE_Y },
+        { x: 460, y: 143 },
+        { x: 252, y: 143 },
+        { x: 250, y: 182 }
       ];
       return start === 'newHall' ? route : [...route].reverse();
     }
@@ -485,12 +487,24 @@
     ];
   }
 
-  // Creates the requested number of empty photo-guide slots.
-  // To add a picture later, replace image: "" with its file path.
-  // To add directions later, type them into text: "".
-  function createBlankSteps(count) {
-    return Array.from({ length: count }, () => ({
-      image: "",
+  // Short names used in the image file names.
+  const imgNames = {
+    gate2: "gate2",
+    bigHall: "maryward",
+    newHall: "delphine",
+    languages: "languages",
+    art: "art",
+    chemistry: "chemistry",
+    history: "history"
+  };
+
+  // Creates photo-guide steps with image paths already filled in.
+  // Example: imageSteps("gate2", "newHall", 5) ->
+  //   images/gate2-to-delphine-1.jpg ... images/gate2-to-delphine-5.jpg
+  // Type the directions into text: "" later if you want them.
+  function imageSteps(start, end, count) {
+    return Array.from({ length: count }, (_, i) => ({
+      image: `images/${imgNames[start]}-to-${imgNames[end]}-${i + 1}.jpg`,
       fallbackText: "",
       text: ""
     }));
@@ -500,55 +514,55 @@
   // Mary Ward Hall -> Gate 2 was not assigned a picture count, so it is omitted for now.
   const routePhotoGuides = {
     // GATE 2
-    "gate2->bigHall": createBlankSteps(4),
-    "gate2->newHall": createBlankSteps(5),
-    "gate2->languages": createBlankSteps(3),
-    "gate2->art": createBlankSteps(4),
-    "gate2->chemistry": createBlankSteps(5),
-    "gate2->history": createBlankSteps(6),
+    "gate2->bigHall": imageSteps("gate2", "bigHall", 4),
+    "gate2->newHall": imageSteps("gate2", "newHall", 5),
+    "gate2->languages": imageSteps("gate2", "languages", 3),
+    "gate2->art": imageSteps("gate2", "art", 4),
+    "gate2->chemistry": imageSteps("gate2", "chemistry", 5),
+    "gate2->history": imageSteps("gate2", "history", 6),
 
     // MARY WARD HALL
-    "bigHall->newHall": createBlankSteps(5),
+    "bigHall->newHall": imageSteps("bigHall", "newHall", 5),
 
     // DELPHINE HART HALL
-    "newHall->bigHall": createBlankSteps(5),
-    "newHall->languages": createBlankSteps(7),
-    "newHall->art": createBlankSteps(8),
-    "newHall->chemistry": createBlankSteps(9),
-    "newHall->history": createBlankSteps(10),
-    "newHall->gate2": createBlankSteps(5),
+    "newHall->bigHall": imageSteps("newHall", "bigHall", 5),
+    "newHall->languages": imageSteps("newHall", "languages", 7),
+    "newHall->art": imageSteps("newHall", "art", 8),
+    "newHall->chemistry": imageSteps("newHall", "chemistry", 9),
+    "newHall->history": imageSteps("newHall", "history", 10),
+    "newHall->gate2": imageSteps("newHall", "gate2", 5),
 
     // LANGUAGES
-    "languages->newHall": createBlankSteps(6),
-    "languages->bigHall": createBlankSteps(3),
-    "languages->history": createBlankSteps(2),
-    "languages->chemistry": createBlankSteps(2),
-    "languages->art": createBlankSteps(2),
-    "languages->gate2": createBlankSteps(2),
+    "languages->newHall": imageSteps("languages", "newHall", 6),
+    "languages->bigHall": imageSteps("languages", "bigHall", 3),
+    "languages->history": imageSteps("languages", "history", 2),
+    "languages->chemistry": imageSteps("languages", "chemistry", 2),
+    "languages->art": imageSteps("languages", "art", 2),
+    "languages->gate2": imageSteps("languages", "gate2", 2),
 
     // HISTORY
-    "history->newHall": createBlankSteps(5),
-    "history->bigHall": createBlankSteps(3),
-    "history->gate2": createBlankSteps(1),
-    "history->chemistry": createBlankSteps(2),
-    "history->art": createBlankSteps(2),
-    "history->languages": createBlankSteps(2),
+    "history->newHall": imageSteps("history", "newHall", 5),
+    "history->bigHall": imageSteps("history", "bigHall", 3),
+    "history->gate2": imageSteps("history", "gate2", 1),
+    "history->chemistry": imageSteps("history", "chemistry", 2),
+    "history->art": imageSteps("history", "art", 2),
+    "history->languages": imageSteps("history", "languages", 2),
 
     // CHEMISTRY
-    "chemistry->newHall": createBlankSteps(5),
-    "chemistry->bigHall": createBlankSteps(2),
-    "chemistry->history": createBlankSteps(2),
-    "chemistry->art": createBlankSteps(2),
-    "chemistry->languages": createBlankSteps(2),
-    "chemistry->gate2": createBlankSteps(2),
+    "chemistry->newHall": imageSteps("chemistry", "newHall", 5),
+    "chemistry->bigHall": imageSteps("chemistry", "bigHall", 2),
+    "chemistry->history": imageSteps("chemistry", "history", 2),
+    "chemistry->art": imageSteps("chemistry", "art", 2),
+    "chemistry->languages": imageSteps("chemistry", "languages", 2),
+    "chemistry->gate2": imageSteps("chemistry", "gate2", 2),
 
     // ART
-    "art->bigHall": createBlankSteps(3),
-    "art->newHall": createBlankSteps(5),
-    "art->gate2": createBlankSteps(2),
-    "art->history": createBlankSteps(2),
-    "art->languages": createBlankSteps(2),
-    "art->chemistry": createBlankSteps(2)
+    "art->bigHall": imageSteps("art", "bigHall", 3),
+    "art->newHall": imageSteps("art", "newHall", 5),
+    "art->gate2": imageSteps("art", "gate2", 2),
+    "art->history": imageSteps("art", "history", 2),
+    "art->languages": imageSteps("art", "languages", 2),
+    "art->chemistry": imageSteps("art", "chemistry", 2)
   };
 
   // These original Mary Ward Hall images are retained exactly as requested.
@@ -595,7 +609,7 @@
       }));
     }
 
-    return routePhotoGuides[routeKey] || createBlankSteps(0);
+    return routePhotoGuides[routeKey] || [];
   }
 
   function onSelectionChange() {
