@@ -56,7 +56,7 @@
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
       <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
 
-        <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+       <div class="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-3">
 
           <!-- Starting Point -->
           <div>
@@ -83,71 +83,79 @@
             </div>
           </div>
 
-          <!-- Destination -->
-          <div>
-            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
-              Destination
-            </label>
+         <!-- Destination + Subject -->
+<div class="flex flex-col gap-3">
 
-            <div class="relative flex items-center">
-              <i class="fa-solid fa-flag-checkered absolute left-3 text-rose-600"></i>
+  <!-- Destination -->
+  <div>
+    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+      Destination
+    </label>
 
-              <select id="endSelect" onchange="onSelectionChange()"
-                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
-                <option value="" disabled selected>Select destination...</option>
-                <option value="bigHall">Mary Ward Hall</option>
-                <option value="newHall">Delphine Hart Hall</option>
-                <option value="languages">Languages</option>
-                <option value="art">Art</option>
-                <option value="chemistry">Chemistry</option>
-                <option value="history">History</option>
-                <option value="gate2">Gate 2 (Main Entrance)</option>
-              </select>
+    <div class="relative flex items-center">
+      <i class="fa-solid fa-flag-checkered absolute left-3 text-rose-600"></i>
 
-              <i class="fa-solid fa-chevron-down absolute right-3 text-xs text-slate-400 pointer-events-none"></i>
-            </div>
-          </div>
+      <select id="endSelect" onchange="onSelectionChange()"
+        class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer">
+        <option value="" disabled selected>Select destination...</option>
+        <option value="bigHall">Mary Ward Hall</option>
+        <option value="newHall">Delphine Hart Hall</option>
+        <option value="languages">Languages</option>
+        <option value="art">Art</option>
+        <option value="chemistry">Chemistry</option>
+        <option value="history">History</option>
+        <option value="gate2">Gate 2 (Main Entrance)</option>
+      </select>
 
-          <!-- Subject -->
-          <div>
-            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
-              Subject
-            </label>
+      <i class="fa-solid fa-chevron-down absolute right-3 text-xs text-slate-400 pointer-events-none"></i>
+    </div>
+  </div>
 
-            <input
-              id="subjectInput"
-              type="text"
-              list="subjectOptions"
-              oninput="onSubjectInput()"
-              placeholder="Type a subject..."
-              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500"
-            >
+  <!-- Subject directly below Destination -->
+  <div>
+    <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+      Subject (Optional)
+    </label>
 
-            <datalist id="subjectOptions">
-              <option value="Political Science and Sociology">
-              <option value="Economics">
-              <option value="Business Studies and Entrepreneurship">
-              <option value="Mathematics">
-              <option value="Accounts">
-              <option value="Computer Science">
-              <option value="Artificial Intelligence">
-              <option value="Home Science">
-              <option value="Psychology">
-              <option value="Physical Education">
-              <option value="Geography">
-              <option value="Biology">
-              <option value="Physics">
-              <option value="Foreign Languages">
-              <option value="English">
-              <option value="Hindi">
-              <option value="French">
-              <option value="German">
-              <option value="Bengali">
-              <option value="Chemistry">
-              <option value="Arts">
-              <option value="History">
-            </datalist>
-          </div>
+    <input
+      id="subjectInput"
+      type="text"
+      list="subjectOptions"
+      oninput="onSubjectInput()"
+      placeholder="Type or select a subject..."
+      autocomplete="off"
+      class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500"
+    >
+
+    <datalist id="subjectOptions">
+      <option value="Political Science and Sociology">
+      <option value="Economics">
+      <option value="Business Studies and Entrepreneurship">
+      <option value="Mathematics">
+      <option value="Accounts">
+      <option value="Computer Science">
+      <option value="Artificial Intelligence">
+      <option value="Home Science">
+      <option value="Psychology">
+      <option value="Physical Education">
+      <option value="Geography">
+      <option value="Biology">
+      <option value="Physics">
+      <option value="Foreign Languages">
+      <option value="English">
+      <option value="Hindi">
+      <option value="French">
+      <option value="German">
+      <option value="Bengali">
+      <option value="Chemistry">
+      <option value="Art">
+      <option value="History">
+    </datalist>
+  </div>
+
+</div>
+
+        
 
         </div> <!-- Navigation fields grid -->
 
