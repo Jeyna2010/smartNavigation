@@ -106,6 +106,53 @@
 
               <i class="fa-solid fa-chevron-down absolute right-3 text-xs text-slate-400 pointer-events-none"></i>
             </div>
+                      <!-- Destination -->
+          <div>
+            <!-- KEEP ALL YOUR EXISTING DESTINATION CODE HERE -->
+          </div>
+
+          <!-- ADD SUBJECT HERE -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1 uppercase tracking-wider">
+              Subject
+            </label>
+
+            <input
+              id="subjectInput"
+              type="text"
+              list="subjectOptions"
+              oninput="onSubjectInput()"
+              placeholder="Type a subject..."
+              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500"
+            >
+
+            <datalist id="subjectOptions">
+              <option value="Political Science and Sociology">
+              <option value="Economics">
+              <option value="Business Studies and Entrepreneurship">
+              <option value="Mathematics">
+              <option value="Accounts">
+              <option value="Computer Science">
+              <option value="Artificial Intelligence">
+              <option value="Home Science">
+              <option value="Psychology">
+              <option value="Physical Education">
+              <option value="Geography">
+              <option value="Biology">
+              <option value="Physics">
+              <option value="Foreign Languages">
+              <option value="English">
+              <option value="Hindi">
+              <option value="French">
+              <option value="German">
+              <option value="Bengali">
+              <option value="Chemistry">
+              <option value="Arts">
+              <option value="History">
+            </datalist>
+          </div>
+
+        </div> <!-- KEEP this grid closing div -->
           </div>
         </div>
 
@@ -263,8 +310,6 @@
       ctx.textAlign = 'left';
     };
 
-    const shutters = (x1, y1, x2, y2, lw) => line(x1, y1, x2, y2, '#58a86a', lw, [8, 10]);
-
     const court = (x, y, w, h, r, kw, kh) => {
       const cx = x + w / 2;
       const cy = y + h / 2;
@@ -417,7 +462,7 @@
         ctx.lineTo(activePoints[i].x, activePoints[i].y);
       }
 
-      ctx.strokeStyle = '#dc2626';
+     ctx.strokeStyle = '#facc15'; // Yellow route
       ctx.lineWidth = 5;
       ctx.setLineDash([10, 8]);
       ctx.stroke();
@@ -431,7 +476,7 @@
       const last = activePoints[activePoints.length - 1];
       ctx.beginPath();
       ctx.arc(last.x, last.y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = '#dc2626';
+      ctx.fillStyle = '#facc15'; 
       ctx.fill();
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
@@ -714,7 +759,89 @@
       { fallbackText: 'Destination', text: `Follow the final pathway to reach ${endName}.` }
     ];
   }
+const subjectDestinations = [
+  // Mary Ward Hall
+  { aliases: ["political science", "sociology", "political science and sociology"], destination: "bigHall" },
+  { aliases: ["economics"], destination: "bigHall" },
+  { aliases: ["business studies", "entrepreneurship", "business studies and entrepreneurship"], destination: "bigHall" },
+  { aliases: ["mathematics", "maths", "math"], destination: "bigHall" },
+  { aliases: ["accounts", "accountancy"], destination: "bigHall" },
+  { aliases: ["computer science", "computers"], destination: "bigHall" },
+  { aliases: ["artificial intelligence", "ai"], destination: "bigHall" },
 
+  // Delphine Hart Hall
+  { aliases: ["home science"], destination: "newHall" },
+  { aliases: ["psychology"], destination: "newHall" },
+  { aliases: ["physical education", "pe"], destination: "newHall" },
+  { aliases: ["geography"], destination: "newHall" },
+  { aliases: ["biology"], destination: "newHall" },
+  { aliases: ["physics"], destination: "newHall" },
+  { aliases: ["foreign languages"], destination: "newHall" },
+
+  // Individual subject locations
+  { aliases: ["english", "hindi", "french", "german", "bengali", "language", "languages"], destination: "languages" },
+  { aliases: ["chemistry", "chem"], destination: "chemistry" },
+  { aliases: ["arts", "art"], destination: "art" },
+  { aliases: ["history"], destination: "history" }
+];
+
+function normalizeSubject(value) {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function editDistance(a, b) {
+  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
+
+  for (let i = 1; i <= a.length; i++) {
+    let diagonal = row[0];
+    row[0] = i;
+
+    for (let j = 1; j <= b.length; j++) {
+      const above = row[j];
+      row[j] = Math.min(
+        row[j] + 1,
+        row[j - 1] + 1,
+        diagonal + (a[i - 1] === b[j - 1] ? 0 : 1)
+      );
+      diagonal = above;
+    }
+  }
+
+  return row[b.length];
+}
+
+function onSubjectInput() {
+  const typed = normalizeSubject(document.getElementById("subjectInput").value);
+  if (!typed) return;
+
+  let bestMatch = null;
+  let bestDistance = Infinity;
+
+  for (const item of subjectDestinations) {
+    for (const alias of item.aliases) {
+      const normalizedAlias = normalizeSubject(alias);
+
+      // Exact match or small spelling variation
+      const distance = editDistance(typed, normalizedAlias);
+      const allowedErrors = typed.length >= 8 ? 2 : 1;
+
+      if (
+        (normalizedAlias.includes(typed) && typed.length >= 3) ||
+        distance <= allowedErrors
+      ) {
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestMatch = item;
+        }
+      }
+    }
+  }
+
+  if (bestMatch) {
+    document.getElementById("endSelect").value = bestMatch.destination;
+    onSelectionChange();
+  }
+}
   function onSelectionChange() {
     document.getElementById('takeMeBtn').disabled = true;
   }
