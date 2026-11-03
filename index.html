@@ -135,7 +135,7 @@
 
     <!-- Map -->
     <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden flex-grow flex items-center justify-center min-h-[460px]">
-      <canvas id="campusCanvas" width="800" height="520"
+           <canvas id="campusCanvas" width="1000" height="720"
         class="max-w-full rounded-xl bg-slate-50 border border-slate-100">
       </canvas>
     </div>
@@ -206,20 +206,21 @@
 <script>
   const canvas = document.getElementById('campusCanvas');
   const ctx = canvas.getContext('2d');
-
-  const TOP_CORRIDOR_Y = 114;
-  const LOWER_PASSAGE_Y = 305;
-  const EAST_LOOP_X = 470;
+  const TOP_CORRIDOR_Y = 154;
+  const LOWER_PASSAGE_Y = 490;
+  const EAST_LOOP_X = 524;
+  const DOOR_X = 232;
+  const DOOR_Y = 515;
 
   const locs = {
-    gate2: { name: "Gate 2", x: 95, y: 35 },
-    gate3: { name: "Gate 3 (Closed)", x: 665, y: 35 },
-    bigHall: { name: "Mary Ward Hall", x: 290, y: 227 },
-    newHall: { name: "Delphine Hart Hall", x: 82, y: 400 },
-    languages: { name: "Languages", x: 440, y: 72 },
-    art: { name: "Art", x: 505, y: 72 },
-    chemistry: { name: "Chemistry", x: 565, y: 72 },
-    history: { name: "History", x: 625, y: 72 }
+    gate2: { name: "Gate 2", x: 131, y: 60 },
+    gate3: { name: "Gate 3 (Closed)", x: 900, y: 60 },
+    bigHall: { name: "Mary Ward Hall", x: 362, y: 355 },
+    newHall: { name: "Delphine Hart Hall", x: 115, y: 600 },
+    languages: { name: "Languages", x: 531, y: 92 },
+    art: { name: "Art", x: 618, y: 92 },
+    chemistry: { name: "Chemistry", x: 706, y: 92 },
+    history: { name: "History", x: 806, y: 92 }
   };
 
   let activePoints = [];
@@ -230,135 +231,184 @@
   function drawCampusMap() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(15, 15, 770, 490);
+    const box = (x, y, w, h, fill, stroke, lw) => {
+      if (fill) { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 2; ctx.strokeRect(x, y, w, h); }
+    };
 
-    ctx.fillStyle = '#2563eb';
-    ctx.fillRect(65, 10, 60, 30);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillText('Gate 2', 76, 30);
-
-    ctx.fillStyle = '#64748b';
-    ctx.fillRect(635, 10, 60, 30);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText('Gate 3', 646, 24);
-    ctx.font = '8px Inter, sans-serif';
-    ctx.fillText('(Closed)', 648, 34);
-
-    ctx.fillStyle = '#fcf2f6';
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 2.5;
-    ctx.fillRect(140, 50, 545, 42);
-    ctx.strokeRect(140, 50, 545, 42);
-
-    ctx.fillStyle = '#db2777';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillText('Block A Corridor', 185, 76);
-
-    const rooms = [
-      { name: 'Languages', x: 410, w: 60 },
-      { name: 'Art', x: 475, w: 55 },
-      { name: 'Chemistry', x: 535, w: 65 },
-      { name: 'History', x: 605, w: 70 }
-    ];
-
-    rooms.forEach(room => {
-      ctx.strokeStyle = '#db2777';
-      ctx.strokeRect(room.x, 50, room.w, 42);
-      ctx.fillStyle = '#9d174d';
-      ctx.font = 'bold 10px Inter, sans-serif';
-      ctx.fillText(room.name, room.x + 6, 75);
-    });
-
-    ctx.strokeStyle = '#475569';
-    ctx.lineWidth = 2;
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillRect(295, 96, 45, 20);
-    ctx.strokeRect(295, 96, 45, 20);
-
-    for (let sx = 302; sx < 338; sx += 7) {
+    const line = (x1, y1, x2, y2, color, lw, dash) => {
       ctx.beginPath();
-      ctx.moveTo(sx, 96);
-      ctx.lineTo(sx, 116);
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+      ctx.setLineDash(dash || []);
       ctx.stroke();
-    }
+      ctx.setLineDash([]);
+    };
 
-    ctx.fillStyle = '#1e293b';
-    ctx.font = 'bold 8px Inter, sans-serif';
-    ctx.fillText('Outdoor Stairs', 296, 109);
+    const ring = (x, y, r, color, lw) => {
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+      ctx.stroke();
+    };
 
-    ctx.fillStyle = '#fce7f3';
-    ctx.strokeStyle = '#db2777';
+    const label = (text, x, y, color, size, align) => {
+      ctx.fillStyle = color;
+      ctx.font = `bold ${size}px Inter, sans-serif`;
+      ctx.textAlign = align || 'left';
+      ctx.fillText(text, x, y);
+      ctx.textAlign = 'left';
+    };
+
+    const shutters = (x1, y1, x2, y2, lw) => line(x1, y1, x2, y2, '#58a86a', lw, [8, 10]);
+
+    const court = (x, y, w, h, r, kw, kh) => {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      box(x, y, w, h, null, '#f3e8da', 2);
+      line(cx, y, cx, y + h, '#f3e8da', 2);
+      ring(cx, cy, r, '#f3e8da', 2);
+      box(x, cy - kh / 2, kw, kh, 'rgba(231,210,195,0.6)', '#f3e8da', 2);
+      box(x + w - kw, cy - kh / 2, kw, kh, 'rgba(231,210,195,0.6)', '#f3e8da', 2);
+      box(x - 5, cy - 10, 5, 20, '#4b5563');
+      box(x + w, cy - 10, 5, 20, '#4b5563');
+    };
+
+    // Ground and boundary wall
+    box(0, 0, canvas.width, canvas.height, '#e6eadf');
+    box(19, 19, 962, 682, '#e2ddd0', '#b5174f', 5);
+
+    // One connected court floor
+    ctx.beginPath();
+    ctx.moveTo(50, 135);
+    ctx.lineTo(815, 135);
+    ctx.lineTo(815, 475);
+    ctx.lineTo(530, 475);
+    ctx.lineTo(530, 265);
+    ctx.lineTo(200, 265);
+    ctx.lineTo(200, 434);
+    ctx.lineTo(50, 434);
+    ctx.closePath();
+    ctx.fillStyle = '#c27565';
+    ctx.fill();
+    ctx.strokeStyle = '#f1e6d6';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // Corridor walls on the left
+    line(52, 135, 52, 434, '#f3ecda', 5);
+    line(93, 135, 93, 434, '#f3ecda', 5);
+
+    // Three basketball courts
+    court(250, 158, 230, 94, 18, 40, 54);
+    court(548, 148, 250, 150, 24, 48, 70);
+    court(548, 312, 250, 150, 24, 48, 70);
+
+    // Block A
+    box(181, 70, 681, 65, '#d9cfb9');
+    shutters(184, 130, 860, 130, 6);
+    box(175, 60, 681, 65, '#b9c0ca', '#f3eee2', 3);
+    line(181, 92, 475, 92, '#cfd5dd', 1.5);
+    box(481, 60, 100, 65, '#aab2be', '#f3eee2', 2);
+    box(581, 60, 75, 65, '#aab2be', '#f3eee2', 2);
+    box(656, 60, 100, 65, '#aab2be', '#f3eee2', 2);
+    box(756, 60, 100, 65, '#aab2be', '#f3eee2', 2);
+    label('Block A Corridor', 231, 98, '#1f2937', 17);
+    label('Languages', 531, 98, '#1f2937', 17, 'center');
+    label('Art', 618, 98, '#1f2937', 17, 'center');
+    label('Chemistry', 706, 98, '#1f2937', 17, 'center');
+    label('History', 806, 98, '#1f2937', 17, 'center');
+
+    // Gates
+    box(88, 10, 87, 115, '#3b82f6', '#1d4ed8', 2.5);
+    box(88, 10, 11, 20, '#334155');
+    box(164, 10, 11, 20, '#334155');
+    box(99, 13, 65, 6, '#334155');
+    label('Gate 2', 131, 78, '#ffffff', 17, 'center');
+
+    box(856, 10, 88, 115, '#a3afc0', '#64748b', 2.5);
+    box(856, 10, 11, 20, '#334155');
+    box(933, 10, 11, 20, '#334155');
+    box(867, 13, 66, 6, '#334155');
+    label('Gate 3', 900, 70, '#1e293b', 17, 'center');
+    label('(Closed)', 900, 92, '#1e293b', 17, 'center');
+
+    // Stairs
+    box(369, 125, 56, 27, '#f3ecda', '#8a7e66', 2);
+    line(373, 138, 421, 138, '#b9ae96', 18, [3, 5]);
+    label('Stairs', 360, 146, '#ffffff', 17, 'right');
+
+    // Mary Ward Hall
+    box(218, 275, 300, 169, '#d9cfb9');
+    line(515, 279, 515, 441, '#58a86a', 5, [8, 10]);
+    shutters(221, 439, 512, 439, 6);
+    box(212, 265, 300, 169, '#f3ecda', '#8a7e66', 2.5);
+    box(220, 273, 284, 153, '#c7ccd3', '#e3e6ea', 1.5);
+    box(331, 255, 50, 10, '#f3ecda', '#8a7e66', 2.5);
+    box(331, 434, 50, 10, '#f3ecda', '#8a7e66', 2.5);
+    box(222, 275, 27, 27, '#e59a45', '#8a4b10', 1.5);
+    line(222, 275, 249, 302, '#8a4b10', 1.5);
+    line(249, 275, 222, 302, '#8a4b10', 1.5);
+    label('Mary Ward Hall', 362, 355, '#1e293b', 18, 'center');
+
+    // Fire escape (corner of Mary Ward Hall and the playground)
+    box(474, 444, 38, 32, '#4b5563', '#1f2937', 2);
+    ctx.beginPath();
+    ctx.moveTo(478, 448);
+    ctx.lineTo(508, 456);
+    ctx.lineTo(478, 464);
+    ctx.lineTo(508, 472);
+    ctx.strokeStyle = '#cbd5e1';
     ctx.lineWidth = 2.5;
-    ctx.fillRect(170, 160, 240, 135);
-    ctx.strokeRect(170, 160, 240, 135);
+    ctx.stroke();
+    label('Fire escape', 466, 466, '#334155', 16, 'right');
 
-    ctx.strokeRect(265, 152, 40, 8);
-    ctx.fillRect(265, 152, 40, 8);
-    ctx.strokeRect(265, 295, 40, 8);
-    ctx.fillRect(265, 295, 40, 8);
+    // Delphine Hart Hall
+    box(43, 444, 175, 243, '#d9cfb9');
+    shutters(46, 682, 215, 682, 6);
+    box(37, 434, 175, 243, '#f3ecda', '#8a7e66', 2.5);
+    box(45, 442, 159, 227, '#d7c3cb');
+    box(56, 544, 131, 131, '#c9a3b6');
+    box(50, 534, 131, 131, '#f0d6e3', '#8a7e66', 2.5);
+    label('Delphine Hart', 115, 595, '#4a1d36', 16.5, 'center');
+    label('Hall', 115, 618, '#4a1d36', 16.5, 'center');
+    box(202, 419, 23, 28, '#f3ecda', '#8a7e66', 2);
+    box(212, 496, 10, 38, '#86d13f', '#8a7e66', 2);
 
-    ctx.fillStyle = '#9d174d';
-    ctx.font = 'bold 14px Inter, sans-serif';
-    ctx.fillText('Mary Ward Hall', 225, 220);
+    // Playgrounds
+    box(245, 505, 245, 163, '#9ed08a', '#4d8f48', 3);
+    box(257, 517, 221, 25, '#add99a');
+    box(257, 567, 221, 25, '#add99a');
+    box(257, 617, 221, 25, '#add99a');
+    label('Playground', 367, 560, '#14532d', 18, 'center');
 
-    ctx.strokeStyle = '#db2777';
-    ctx.lineWidth = 2.5;
-    ctx.fillStyle = '#fce7f3';
-    ctx.fillRect(30, 310, 125, 180);
-    ctx.strokeRect(30, 310, 125, 180);
+    box(502, 505, 125, 163, '#9ed08a', '#4d8f48', 3);
+    box(527, 532, 75, 53, null, '#e0a82e', 4);
+    line(552, 532, 552, 585, '#e0a82e', 3);
+    line(577, 532, 577, 585, '#e0a82e', 3);
+    line(527, 558, 602, 558, '#e0a82e', 3);
+    label('Playground', 564, 647, '#14532d', 16.5, 'center');
 
-    ctx.strokeRect(155, 345, 8, 30);
-    ctx.fillRect(155, 345, 8, 30);
+    // Block B
+    box(837, 275, 138, 356, '#d9cfb9');
+    line(972, 279, 972, 617, '#58a86a', 5, [8, 10]);
+    shutters(840, 626, 972, 626, 6);
+    box(831, 265, 138, 356, '#8fd0c6', '#f3eee2', 3);
+    line(900, 270, 900, 616, '#b5e2da', 2);
+    box(845, 280, 16, 180, '#5f9a94');
+    box(873, 300, 16, 140, '#5f9a94');
+    label('Block B', 900, 535, '#0f3d38', 18, 'center');
 
-    ctx.fillStyle = '#fbcfe8';
-    ctx.fillRect(40, 375, 105, 105);
-    ctx.strokeRect(40, 375, 105, 105);
+    // Canteen
+    box(668, 519, 150, 112, '#d9a574');
+    box(662, 509, 150, 112, '#eaa877', '#b45309', 2.5);
+    box(672, 519, 130, 92, null, '#f5c9a2', 1.5);
+    label('Canteen', 737, 570, '#7c2d12', 18, 'center');
 
-    ctx.fillStyle = '#9d174d';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillText('Delphine Hart', 48, 420);
-    ctx.fillText('Hall', 75, 438);
-
-    ctx.strokeStyle = '#16a34a';
-    ctx.lineWidth = 2.5;
-    ctx.fillStyle = '#dcfce7';
-    ctx.fillRect(180, 320, 210, 150);
-    ctx.strokeRect(180, 320, 210, 150);
-
-    ctx.fillStyle = '#15803d';
-    ctx.font = 'bold 14px Inter, sans-serif';
-    ctx.fillText('Playground', 245, 400);
-
-    ctx.fillStyle = '#dcfce7';
-    ctx.fillRect(400, 345, 100, 125);
-    ctx.strokeRect(400, 345, 100, 125);
-
-    ctx.fillStyle = '#15803d';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText('Playground', 410, 410);
-
-    ctx.strokeStyle = '#db2777';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(530, 180, 130, 140);
-    ctx.strokeRect(530, 180, 130, 140);
-
-    ctx.fillStyle = '#9d174d';
-    ctx.font = 'bold 15px Inter, sans-serif';
-    ctx.fillText('Block B', 565, 255);
-
-    ctx.strokeStyle = '#ea580c';
-    ctx.fillStyle = '#ffedd5';
-    ctx.fillRect(540, 355, 120, 90);
-    ctx.strokeRect(540, 355, 120, 90);
-
-    ctx.fillStyle = '#c2410c';
-    ctx.font = 'bold 13px Inter, sans-serif';
-    ctx.fillText('Canteen', 575, 405);
-
+    // Route
     if (activePoints.length > 1) {
       ctx.beginPath();
       ctx.moveTo(activePoints[0].x, activePoints[0].y);
@@ -368,19 +418,19 @@
       }
 
       ctx.strokeStyle = '#dc2626';
-      ctx.lineWidth = 4;
-      ctx.setLineDash([8, 6]);
+      ctx.lineWidth = 5;
+      ctx.setLineDash([10, 8]);
       ctx.stroke();
       ctx.setLineDash([]);
 
       ctx.beginPath();
-      ctx.arc(activePoints[0].x, activePoints[0].y, 6, 0, Math.PI * 2);
+      ctx.arc(activePoints[0].x, activePoints[0].y, 7, 0, Math.PI * 2);
       ctx.fillStyle = '#16a34a';
       ctx.fill();
 
       const last = activePoints[activePoints.length - 1];
       ctx.beginPath();
-      ctx.arc(last.x, last.y, 7, 0, Math.PI * 2);
+      ctx.arc(last.x, last.y, 8, 0, Math.PI * 2);
       ctx.fillStyle = '#dc2626';
       ctx.fill();
       ctx.strokeStyle = '#ffffff';
@@ -392,85 +442,87 @@
   function buildRoute(start, end) {
     const p1 = locs[start];
     const p2 = locs[end];
+    const classRooms = ['languages', 'art', 'chemistry', 'history'];
 
     if (start === 'gate2' && end === 'bigHall') {
       return [
-        { x: 95, y: 55 },
-        { x: 95, y: TOP_CORRIDOR_Y },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: 290, y: 160 }
+        { x: 131, y: 130 },
+        { x: 131, y: TOP_CORRIDOR_Y },
+        { x: 356, y: TOP_CORRIDOR_Y },
+        { x: 356, y: 255 }
       ];
     }
 
+    // Delphine Hart Hall <-> Gate 2 (first picture)
     if ((start === 'gate2' && end === 'newHall') || (start === 'newHall' && end === 'gate2')) {
       const route = [
-        { x: 95, y: 55 },
-        { x: 95, y: TOP_CORRIDOR_Y },
+        { x: 131, y: 130 },
+        { x: 131, y: TOP_CORRIDOR_Y },
         { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
         { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: 163, y: LOWER_PASSAGE_Y },
-        { x: 163, y: 360 }
+        { x: DOOR_X, y: LOWER_PASSAGE_Y },
+        { x: DOOR_X, y: DOOR_Y }
       ];
       return start === 'gate2' ? route : [...route].reverse();
     }
 
+    // Delphine Hart Hall <-> Mary Ward Hall (second picture)
     if ((start === 'bigHall' && end === 'newHall') || (start === 'newHall' && end === 'bigHall')) {
       const route = [
-        { x: 163, y: 360 },
-        { x: 163, y: LOWER_PASSAGE_Y },
+        { x: DOOR_X, y: DOOR_Y },
+        { x: DOOR_X, y: LOWER_PASSAGE_Y },
         { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: 290, y: 160 }
+        { x: EAST_LOOP_X, y: 258 },
+        { x: 318, y: 258 },
+        { x: 318, y: 292 }
       ];
       return start === 'newHall' ? route : [...route].reverse();
     }
 
-    if (start === 'newHall' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
+    if (start === 'newHall' && classRooms.includes(end)) {
       return [
-        { x: 163, y: 360 },
-        { x: 163, y: LOWER_PASSAGE_Y },
+        { x: DOOR_X, y: DOOR_Y },
+        { x: DOOR_X, y: LOWER_PASSAGE_Y },
         { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
         { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
         { x: p2.x, y: TOP_CORRIDOR_Y },
+        { x: p2.x, y: 128 }
+      ];
+    }
+
+    if (end === 'newHall' && classRooms.includes(start)) {
+      return [
+        { x: p1.x, y: 128 },
+        { x: p1.x, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+        { x: DOOR_X, y: LOWER_PASSAGE_Y },
+        { x: DOOR_X, y: DOOR_Y }
+      ];
+    }
+
+    if (start === 'gate2' && classRooms.includes(end)) {
+      return [
+        { x: 131, y: 92 },
         { x: p2.x, y: 92 }
       ];
     }
 
-    if (end === 'newHall' && ['languages', 'art', 'chemistry', 'history'].includes(start)) {
+    if (start === 'bigHall' && classRooms.includes(end)) {
       return [
-        { x: p1.x, y: 92 },
-        { x: p1.x, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
-        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
-        { x: 163, y: LOWER_PASSAGE_Y },
-        { x: 163, y: 360 }
-      ];
-    }
-
-    if (start === 'gate2' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
-      return [
-        { x: 95, y: 55 },
-        { x: 95, y: 72 },
-        { x: p2.x, y: 72 }
-      ];
-    }
-
-    if (start === 'bigHall' && ['languages', 'art', 'chemistry', 'history'].includes(end)) {
-      return [
-        { x: 290, y: 160 },
-        { x: 290, y: TOP_CORRIDOR_Y },
+        { x: 356, y: 255 },
+        { x: 356, y: TOP_CORRIDOR_Y },
         { x: p2.x, y: TOP_CORRIDOR_Y },
-        { x: p2.x, y: 92 }
+        { x: p2.x, y: 128 }
       ];
     }
 
-    if (end === 'bigHall' && ['languages', 'art', 'chemistry', 'history'].includes(start)) {
+    if (end === 'bigHall' && classRooms.includes(start)) {
       return [
-        { x: p1.x, y: 92 },
+        { x: p1.x, y: 128 },
         { x: p1.x, y: TOP_CORRIDOR_Y },
-        { x: 290, y: TOP_CORRIDOR_Y },
-        { x: 290, y: 160 }
+        { x: 356, y: TOP_CORRIDOR_Y },
+        { x: 356, y: 255 }
       ];
     }
 
