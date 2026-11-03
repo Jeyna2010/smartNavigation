@@ -405,28 +405,26 @@
       ];
     }
 
-    // Delphine Hart Hall <-> Gate 2 (updated per first picture)
     if ((start === 'gate2' && end === 'newHall') || (start === 'newHall' && end === 'gate2')) {
       const route = [
-        { x: 80, y: 40 },
-        { x: 80, y: 135 },
-        { x: 477, y: 135 },
-        { x: 477, y: LOWER_PASSAGE_Y },
+        { x: 95, y: 55 },
+        { x: 95, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
         { x: 163, y: LOWER_PASSAGE_Y },
         { x: 163, y: 360 }
       ];
       return start === 'gate2' ? route : [...route].reverse();
     }
 
-    // Delphine Hart Hall <-> Mary Ward Hall (updated per second picture)
     if ((start === 'bigHall' && end === 'newHall') || (start === 'newHall' && end === 'bigHall')) {
       const route = [
         { x: 163, y: 360 },
         { x: 163, y: LOWER_PASSAGE_Y },
-        { x: 460, y: LOWER_PASSAGE_Y },
-        { x: 460, y: 143 },
-        { x: 252, y: 143 },
-        { x: 250, y: 182 }
+        { x: EAST_LOOP_X, y: LOWER_PASSAGE_Y },
+        { x: EAST_LOOP_X, y: TOP_CORRIDOR_Y },
+        { x: 290, y: TOP_CORRIDOR_Y },
+        { x: 290, y: 160 }
       ];
       return start === 'newHall' ? route : [...route].reverse();
     }
@@ -824,7 +822,7 @@
   }
 
   window.onload = function() {
-    drawCampusMap(); 
+    drawCampusMap();
   };
 </script>
 
