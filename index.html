@@ -1,5 +1,3 @@
-
-import { Analytics } from "@vercel/analytics/next"
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,21 +8,9 @@ import { Analytics } from "@vercel/analytics/next"
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-
-    canvas {
-      width: 100%;
-      height: auto;
-    }
-  </style>
 </head>
 
+  
 <body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col">
 
   <!-- Header -->
@@ -1041,6 +1027,11 @@ label('Block B', 900, 390, '#0f3d38', 18, 'center');
     drawCampusMap();
   };
 </script>
-
+<script>
+  window.va = window.va || function () {
+    (window.vaq = window.vaq || []).push(arguments);
+  };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
